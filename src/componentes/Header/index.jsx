@@ -4,6 +4,7 @@ const HeaderEstilizado = styled.header`
   background-color: #2c2c2c;
   display: flex;
   justify-content: start;
+  padding-left: 20px;
   text-align: center;
 `
   
