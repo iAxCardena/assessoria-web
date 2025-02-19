@@ -12,7 +12,6 @@ const GlobalStyle = createGlobalStyle`
   
   .body {
     margin: 0;
-    height: 100%;
   }
 `
 

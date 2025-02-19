@@ -7,8 +7,11 @@ import { v4 as uuidv4 } from "uuid";
 import { useState } from "react"
 import CloseIcon from '@mui/icons-material/Close';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import ListaSuspensa from "../ListaSuspensa";
+import ddiList from '../../assets/json/ddi.json';
+import RadioOptions from "../RadioOptions"
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import ListaSuspensa from "../ListaSuspensa"
+import CheckIcon from '@mui/icons-material/Check';
 
 const Container = styled.ul`
 	background-color: #e0e0e0;
@@ -18,7 +21,7 @@ const Container = styled.ul`
 `
 
 const StyledLabel = styled.p`
-    margin: 0 0 10px 0;
+    margin: 10px 0;
 `
 
 const StyledDialogContent = styled(DialogContent)(() => ({
@@ -42,22 +45,19 @@ const StyledDialogTitle = styled(DialogTitle)(() => ({
     padding: '10px',
 }))
 
-const StyledTextField = styled(TextField)(({props}) => ({
+const StyledTextField = styled(TextField)(() => ({
     display: 'flex',
     margin: '0 0 20px 0',
+    '& input': {
+        height: '8px'
+    }
 }))
 
 const StyledInfoButton = styled(InfoOutlinedIcon)`
     width: 16px;
     height: 16px;
     padding-left: 5px;
-    color: blue;
-`
-
-const StyledPriorityHighIcon = styled(Botao)`
-    width: 10px;
-    height: 40px;
-    background-color: gray;
+    color: #363636;
 `
 
 const StyledNoGuestsText = styled.p`
@@ -173,22 +173,20 @@ export default function ListaConvidados() {
                 </StyledDialogTitle>
                 <DialogSectionDivider>Dados do convite</DialogSectionDivider>
                 <StyledDialogContent>
-                    <Tipografia variante={"body"} componente={"body"}>Nome do convite*</Tipografia>
-                    <StyledTextField id="outlined-basic" fullWidth variant="outlined" label="Ex.: Familia da Julia"></StyledTextField>
+                    <StyledLabel sx={{padding: '10px'}}>Nome do convite*</StyledLabel>
+                    <StyledTextField id="outlined-basic" fullWidth variant="outlined" placeholder="Ex.: Familia da Julia"></StyledTextField>
                     <Grid2 container spacing={2}>
                         <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
-                            {/*TODO listaSuspença com DDI*/}
                             <StyledLabel>DDI</StyledLabel>
-                            <ListaSuspensa isDDISelect={true}/>
-                            {/* <StyledTextField variant="outlined" value="+55"></StyledTextField> */}
+                            <ListaSuspensa id={"DDI"} itens={ddiList} isDDISelect={true}/>
                         </Grid2>
                         <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
                             <StyledLabel>Celular com DDD: </StyledLabel>
-                            <StyledTextField variant="outlined" label="(00) 999999999"></StyledTextField>
+                            <StyledTextField variant="outlined" placeholder="(00) 999999999"></StyledTextField>
                         </Grid2>
                         <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
                             <StyledLabel>A qual grupo pertence: </StyledLabel>
-                            <ListaSuspensa itens={listaGrupos}/>
+                            <ListaSuspensa id={"grupos"} itens={listaGrupos}/>
                         </Grid2>
                     </Grid2>
                     <StyledLabel>Observações: </StyledLabel>
@@ -218,54 +216,39 @@ export default function ListaConvidados() {
                 </StyledDialogTitle>
                 <StyledDialogContent>
                     <Grid2 container spacing={2}>
-                        <Grid2 size={{ xs: 10, sm: 10, md: 10 }}>
+                        <Grid2 size={{ xs: 9, sm: 9, md: 9 }}>
                             <StyledLabel>Nome do convidado*</StyledLabel>
-                            <StyledTextField id="outlined-basic" fullWidth variant="outlined" label="Ex.: Julia"></StyledTextField>
+                            <StyledTextField id="outlined-basic" fullWidth variant="outlined" placeholder="Ex.: Julia"></StyledTextField>
                         </Grid2>
-                        <Grid2 size={{ xs: 2, sm: 2, md: 2 }}>
-                            <StyledLabel style={{display: 'inline'}}>RSVP</StyledLabel>
-                            <Tooltip title={"Status de Confirmação de presença"}>
-                                <StyledInfoButton style={{marginLeft:'2px'}}/>
-                            </Tooltip>
-                            <StyledPriorityHighIcon>
-                                <PriorityHighIcon/>
-                            </StyledPriorityHighIcon>
+                        <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
+                            <StyledLabel style={{display: 'flex', alignItems: 'center'}}>
+                                RSVP
+                                <Tooltip title={"Status de Confirmação de presença"}>
+                                    <StyledInfoButton/>
+                                </Tooltip>
+                            </StyledLabel>
+                            
+                            <RadioOptions options={[{id: 1, value: <PriorityHighIcon/>, color: '#be9c5b'},{id: 2, value: <CheckIcon/>, color: '#5baf70'},{id: 3, value: <CloseIcon/>, color: '#c55d5d'}]}/>
                         </Grid2>
                     </Grid2>
                     <Grid2 container spacing={2}>
                         <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
-                            {/*TODO listaSuspença com Mesas existentes*/}
                             <StyledLabel>Mesa: </StyledLabel>
                             <ListaSuspensa label="Digite ou selecione a mesa" itens={listaMesas}/>
                         </Grid2>
-                        {/*TODO componente de checkbox para seleção de Gênero e Pagamento*/}
-                        <Grid2 size={{ xs: 2, sm: 2, md: 2 }}>
+                        <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
                             <StyledLabel>Gênero:</StyledLabel>
-                            <Tipografia variante={"body"} componente={"body"}>Masculino</Tipografia>
-                        </Grid2>
-                        <Grid2 size={{ xs: 2, sm: 2, md: 2 }}>
-                            <Tipografia variante={"body"} componente={"body"}>Feminino</Tipografia>
-                        </Grid2>
-                        <Grid2 size={{ xs: 2, sm: 2, md: 2 }}>
-                            <Tipografia variante={"body"} componente={"body"}>Não binário</Tipografia>
+                            <RadioOptions options={[{id: 1, value: 'Masculino'},{id: 2, value: 'Feminino'},{id: 3, value: 'Não binário'}]}/>
                         </Grid2>
                     </Grid2>
                     <Grid2 container spacing={2}>
                         <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
-                            {/*TODO listaSuspença com Mesas existentes*/}
                             <StyledLabel>Faixa etária: </StyledLabel>
                             <StyledTextField variant="outlined" label=""></StyledTextField>
                         </Grid2>
-                        {/*TODO componente de checkbox para seleção de Gênero e Pagamento*/}
-                        <Grid2 size={{ xs: 2, sm: 2, md: 2 }}>
+                        <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
                             <StyledLabel>Pagamento/custo por convidado:</StyledLabel>
-                            <Tipografia variante={"body"} componente={"body"}>Inteira</Tipografia>
-                        </Grid2>
-                        <Grid2 size={{ xs: 2, sm: 2, md: 2 }}>
-                            <Tipografia variante={"body"} componente={"body"}>Meia</Tipografia>
-                        </Grid2>
-                        <Grid2 size={{ xs: 2, sm: 2, md: 2 }}>
-                            <Tipografia variante={"body"} componente={"body"}>Gratuita</Tipografia>
+                            <RadioOptions options={[{id: 1, value: 'Inteira'},{id: 2, value: 'Meia'},{id: 3, value: 'Gratuita'}]}/>
                         </Grid2>
                     </Grid2>
                     <Grid2 container spacing={2}>
