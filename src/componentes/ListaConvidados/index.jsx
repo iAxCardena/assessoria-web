@@ -1,10 +1,10 @@
-import styled from "@emotion/styled/macro"
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, TextField, Button, Tooltip } from "@mui/material"
-import { Tipografia } from "../Tipografia"
-import { Botao } from "../Botao"
-import { ItemLista } from "./ItemLista"
+import styled from "@emotion/styled/macro";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, TextField, Button, Tooltip, ThemeProvider } from "@mui/material";
+import { Tipografia } from "../Tipografia";
+import { Botao } from "../Botao";
+import { ItemLista } from "./ItemLista";
 import { v4 as uuidv4 } from "uuid";
-import { useState } from "react"
+import { useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import ListaSuspensa from "../ListaSuspensa";
@@ -12,10 +12,12 @@ import ddiList from '../../assets/json/ddi.json';
 import RadioOptions from "../RadioOptions"
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CheckIcon from '@mui/icons-material/Check';
+import theme from '../../theme.ts';
 
 const Container = styled.ul`
-	background-color: #e0e0e0;
+	background-color: ${props => props.backgroundColor};
 	min-height: 50vh;
+    min-width: 700px;
     padding: 30px 20px 20px 20px;
     border-radius: 5px;
 `
@@ -35,7 +37,7 @@ const StyledBotao = styled(Botao)`
 `
 
 const DialogSectionDivider = styled.p`
-    background-color: #DDDDDD;
+    background-color: #dddddd;
     padding: 18px 20px;
     font-weight: 700;
     margin: 0;
@@ -57,7 +59,6 @@ const StyledInfoButton = styled(InfoOutlinedIcon)`
     width: 16px;
     height: 16px;
     padding-left: 5px;
-    color: #363636;
 `
 
 const StyledNoGuestsText = styled.p`
@@ -142,10 +143,10 @@ export default function ListaConvidados() {
     }
 
     return(
-        <>
+        <ThemeProvider theme={theme}>
             <Tipografia variante="h1" componente="h1">Lista de Convidados</Tipografia>
             <Botao variant={"contained"} onClick={openInvitationsPopup}>Adicionar convite</Botao>
-            <Container>
+            <Container backgroundColor={theme.palette.grey[50]}>
                 <Grid2 container spacing={0} sx={{marginBottom: 2}}>
                     <Grid2 size={{ xs: 2, sm: 4, md: 4 }} sx={{margin: '0 0 0 10px'}}>
                         <Tipografia variante="body" componente="bodyBold">Convite</Tipografia>
@@ -163,12 +164,15 @@ export default function ListaConvidados() {
                 />)}
             </Container>
 
-
-            <Dialog fullWidth open={openInvitations} onClose={closeInvitationsPopup} maxWidth="md">
+            <Dialog sx={{
+                '& .MuiPaper-root': {
+                background: theme.palette.common.white
+                }
+            }} fullWidth open={openInvitations} onClose={closeInvitationsPopup} maxWidth="md">
                 <StyledDialogTitle justifyContent={'center'}>
                     Adicionar convite
                     <IconButton style={{float:'right'}} onClick={closeInvitationsPopup}>
-                        <CloseIcon color="primary"/>
+                        <CloseIcon sx={{ color: `grey[200]`}}/>
                     </IconButton>
                 </StyledDialogTitle>
                 <DialogSectionDivider>Dados do convite</DialogSectionDivider>
@@ -193,25 +197,32 @@ export default function ListaConvidados() {
                     <StyledTextField multiline rows={4} fullWidth></StyledTextField>
                 </StyledDialogContent>
                 <DialogSectionDivider>Convidados</DialogSectionDivider>
-                {listaConvidados.size !== 0 ?    //mudar pra == 0 quando já tiver os componentes e listas corretas
+                {listaConvidados.size === 0 ?
                     <StyledNoGuestsText variante="body" componente="body">Nenhum convidado cadastrado. Informe os dados de pelo menos um convidado para este convite. </StyledNoGuestsText> 
                 : 
                     <StyledDialogContent>
-                        a
+                        {listaConvidados.map(convidado => <ItemLista 
+                            key={convidado.id}
+                            convidado={convidado}
+                        />)}
                     </StyledDialogContent>
                 }
                 <StyledBotao variant={"contained"} onClick={openGuestPopup}>Adicionar convidados</StyledBotao>
-                <DialogActions sx={{padding: 0}}>
-                    <Button fullWidth color="success" variant="contained">Salvar</Button>
+                <DialogActions color="primary" sx={{padding: 0}}>
+                    <Button fullWidth color="primary" variant="contained">Salvar</Button>
                 </DialogActions>
             </Dialog>
 
 
-            <Dialog fullWidth open={openGuest} onClose={closeGuestPopup} maxWidth="md">
+            <Dialog sx={{
+                '& .MuiPaper-root': {
+                background: theme.palette.common.white
+                }
+            }} fullWidth open={openGuest} onClose={closeGuestPopup} maxWidth="md">
                 <StyledDialogTitle justifyContent={'center'}>
                     Adicionar convidado
                     <IconButton style={{float:'right'}} onClick={closeGuestPopup}>
-                        <CloseIcon color="primary"/>
+                        <CloseIcon sx={{ color: `grey[200]`}}/>
                     </IconButton>
                 </StyledDialogTitle>
                 <StyledDialogContent>
@@ -224,11 +235,10 @@ export default function ListaConvidados() {
                             <StyledLabel style={{display: 'flex', alignItems: 'center'}}>
                                 RSVP
                                 <Tooltip title={"Status de Confirmação de presença"}>
-                                    <StyledInfoButton/>
+                                    <StyledInfoButton color="primary"/>
                                 </Tooltip>
                             </StyledLabel>
-                            
-                            <RadioOptions options={[{id: 1, value: <PriorityHighIcon/>, color: '#be9c5b'},{id: 2, value: <CheckIcon/>, color: '#5baf70'},{id: 3, value: <CloseIcon/>, color: '#c55d5d'}]}/>
+                            <RadioOptions options={[{id: 1, value: <PriorityHighIcon/>, hint:'Pendente', color: theme.palette.warning.main},{id: 2, value: <CheckIcon/>, hint:'Confirmado', color: theme.palette.success.main},{id: 3, value: <CloseIcon/>, hint:'Não irá comparecer', color: theme.palette.error.main}]}/>
                         </Grid2>
                     </Grid2>
                     <Grid2 container spacing={2}>
@@ -263,9 +273,9 @@ export default function ListaConvidados() {
                     </Grid2>
                 </StyledDialogContent>
                 <DialogActions sx={{padding: 0}}>
-                    <Button fullWidth color="success" variant="contained">Salvar</Button>
+                    <Button fullWidth color="primary" variant="contained">Salvar</Button>
                 </DialogActions>
             </Dialog>
-        </>
+        </ThemeProvider>
     );
 }

@@ -1,23 +1,32 @@
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
+import theme from '../../theme.ts';
+import logo from '../../assets/logo.png';
 
 const HeaderEstilizado = styled.header`
-  background-color: #2c2c2c;
-  display: flex;
-  justify-content: start;
-  padding-left: 20px;
-  text-align: center;
+	background-color: ${props => props.backgroundColor};
+	display: flex;
+	justify-content: start;
+	padding-left: 20px;
+	text-align: center;
 `
   
-const TituloEstilizado = styled.h1`
-  color: #FFFFFF;
-  display: block;
-  text-align: center;
+const LogoEstilizado = styled.img`
+	max-width: 100px;
+	max-height: 100px;
+	display: flex;
+	text-align: center;
+	&:hover {
+		cursor: pointer;
+	}
 `
 
 export default function Header() {
+	console.log(theme)
     return(
-        <HeaderEstilizado>
-					<TituloEstilizado>Assessoria</TituloEstilizado>
+      <ThemeProvider theme={theme}>
+        <HeaderEstilizado backgroundColor={theme.palette.background.default}>
+			<LogoEstilizado src={logo} alt="Logo"></LogoEstilizado>
         </HeaderEstilizado>
+      </ThemeProvider>
     );
 }

@@ -20,8 +20,8 @@ root.render(
   <StyledEngineProvider injectFirst>
     <React.StrictMode>
       <GlobalStyle/>
-      <Header/>
-      <App />
+        <Header/>
+        <App />
     </React.StrictMode>
   </StyledEngineProvider>
 );

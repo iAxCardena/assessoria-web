@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { ThemeProvider, Tooltip } from '@mui/material';
+import theme from '../../theme.ts';
 
 const StyledContainer = styled.div`
   display: flex;
@@ -18,19 +20,23 @@ const StyledOption = styled.div`
   margin: 0 4px 4px 0;
   cursor: pointer;
   &:hover {
-    background-color: ${(props) => props.option.color != null ? props.option.color : 'gray'};
+    background-color: ${(props) => props.option.color != null ? props.option.color : props.defaultColor.light};
   }
   transition: background-color 0.5s;
-  background-color: ${(props) => props.current===props.option.id ? (props.option.color != null ? props.option.color : 'gray') : "#e5e5e5"};
+  background-color: ${(props) => props.current===props.option.id ? (props.option.color != null ? props.option.color : props.defaultColor.main) : "#e5e5e5"};
 `
 
-export default function RadioOptions({label, options}) {
+export default function RadioOptions({options}) {
   const [current, setCurrent] = useState(0);
   return (
-    <StyledContainer>
-      {options.map(option => {
-        return <StyledOption current={current} option={option} key={option.id} onClick={() => setCurrent(option.id)}>{option.value}</StyledOption>;
-      })}
-    </StyledContainer>
+    <ThemeProvider theme={theme}>
+		<StyledContainer>
+			{options.map(option => {
+				return <Tooltip title={option.hint}>
+					<StyledOption defaultColor={theme.palette.primary} current={current} option={option} key={option.id} onClick={() => setCurrent(option.id)}>{option.value}</StyledOption>
+				</Tooltip>;
+			})}
+		</StyledContainer>
+	</ThemeProvider>
   );
 }
