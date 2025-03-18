@@ -14,7 +14,7 @@ const AppContainer = styled.div`
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <AppContainer backgroundColor={theme.palette.grey[300]}>
+      <AppContainer backgroundColor={theme.palette.background.paper}>
         <ListaConvidados/>
       </AppContainer>
     </ThemeProvider>

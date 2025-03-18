@@ -23,7 +23,7 @@ const StyledOption = styled.div`
     background-color: ${(props) => props.option.color != null ? props.option.color : props.defaultColor.light};
   }
   transition: background-color 0.5s;
-  background-color: ${(props) => props.current===props.option.id ? (props.option.color != null ? props.option.color : props.defaultColor.main) : "#e5e5e5"};
+  background-color: ${(props) => props.current===props.option.id ? (props.option.color != null ? props.option.color : props.defaultColor.main) : "#f0eaea"};
 `
 
 export default function RadioOptions({options}) {

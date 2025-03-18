@@ -1,9 +1,14 @@
 import { Autocomplete, Box, TextField } from '@mui/material';
 import ddiList from '../../assets/json/ddi.json';
 
-export default function ListaSuspensa({label = "", selectId, itens, isDDISelect}) {
+export default function ListaSuspensa({label = "", value, onChange, selectId, itens, isDDISelect}) {
+    const handleSelectedDdiChange = (event) => {
+        try {
+            onChange(event.target.lastChild.data)
+        } catch (error) {}
+    }
     const handleSelectedItemChange = (event) => {
-        console.log(event)
+        onChange(event.target.textContent)
     }
 
     if(isDDISelect) {
@@ -13,7 +18,9 @@ export default function ListaSuspensa({label = "", selectId, itens, isDDISelect}
                 sx={{'& input': {
                     height: '8px',
                 }}}
-                defaultValue={"55"}
+                // defaultValue={value || "null"}
+                value={value !== undefined ? ("+"+value) : ""}
+                onChange={(event) => handleSelectedDdiChange(event)}
                 options={ddiList}
                 autoHighlight
                 renderOption={(props, option) => {
@@ -25,13 +32,6 @@ export default function ListaSuspensa({label = "", selectId, itens, isDDISelect}
                         sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
                         {...optionProps}
                     >
-                        <img
-                        loading="lazy"
-                        width="20"
-                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                        alt=""
-                        />
                         {option.label} ({option.code}) +{option.phone}
                     </Box>
                     );

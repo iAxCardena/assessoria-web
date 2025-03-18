@@ -21,7 +21,6 @@ const LogoEstilizado = styled.img`
 `
 
 export default function Header() {
-	console.log(theme)
     return(
       <ThemeProvider theme={theme}>
         <HeaderEstilizado backgroundColor={theme.palette.background.default}>
