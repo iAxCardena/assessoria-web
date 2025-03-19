@@ -18,7 +18,6 @@ export default function ListaSuspensa({label = "", value, onChange, selectId, it
                 sx={{'& input': {
                     height: '8px',
                 }}}
-                // defaultValue={value || "null"}
                 value={value !== undefined ? ("+"+value) : ""}
                 onChange={(event) => handleSelectedDdiChange(event)}
                 options={ddiList}

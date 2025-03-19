@@ -130,7 +130,7 @@ export default function ListaConvidados() {
         grupo: "",
         resposta: 0
     });
-    const [invitation, setInvitation] = useState('');
+    const [invitationName, setInvitationName] = useState('');
     const [ddi, setDdi] = useState('55');
     const [phone, setPhone] = useState('');
     const [group, setGroup] = useState('');
@@ -274,10 +274,9 @@ export default function ListaConvidados() {
 
     const addInvitation = (event) => {
         event.preventDefault();
-        console.log("addInvitation")
-        let newInvitation = {
+        var newInvitation = {
             id: uuidv4(),
-            nome: newGuestName,
+            nome: invitationName,
             ddi: ddi,
             telefone: phone,
             grupo: group,
@@ -285,8 +284,18 @@ export default function ListaConvidados() {
             guests: [],
             resposta: rsvp
         }
-        setInvitation(newInvitation);
-        // closeInvitationsPopup()
+        setInvitations([...invitations, newInvitation]);
+        clearDialogFields()
+        closeInvitationsPopup()
+        console.log(invitations.length)
+    }
+
+    const clearDialogFields = () => {
+        setInvitationName('')
+        setDdi('55')
+        setPhone('')
+        setGroup('')
+        setObservations('')
     }
 
     //TODO arrumar a lista de convites e a lista de convidados
@@ -344,7 +353,7 @@ export default function ListaConvidados() {
                 <DialogSectionDivider>Dados do convite</DialogSectionDivider>
                 <StyledDialogContent>
                     <StyledLabel sx={{padding: '10px'}}>Nome do convite*</StyledLabel>
-                    <StyledTextField value={invitation} onChange={e => setInvitation(e.target.value)} id="outlined-basic" fullWidth variant="outlined" placeholder="Ex.: Familia da Julia"></StyledTextField>
+                    <StyledTextField value={invitationName} onChange={e => setInvitationName(e.target.value)} id="outlined-basic" fullWidth variant="outlined" placeholder="Ex.: Familia da Julia"></StyledTextField>
                     <Grid2 container spacing={2}>
                         <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
                             <StyledLabel>DDI</StyledLabel>
