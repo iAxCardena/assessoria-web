@@ -3,7 +3,7 @@ import theme from '../../theme.ts';
 import logo from '../../assets/logo.png';
 
 const HeaderEstilizado = styled.header`
-	background-color: ${props => props.backgroundColor};
+	background-color: ${props => props.backgroundcolor};
 	display: flex;
 	justify-content: start;
 	padding-left: 20px;
@@ -23,7 +23,7 @@ const LogoEstilizado = styled.img`
 export default function Header() {
     return(
       <ThemeProvider theme={theme}>
-        <HeaderEstilizado backgroundColor={theme.palette.background.default}>
+        <HeaderEstilizado backgroundcolor={theme.palette.background.default}>
 			<LogoEstilizado src={logo} alt="Logo"></LogoEstilizado>
         </HeaderEstilizado>
       </ThemeProvider>

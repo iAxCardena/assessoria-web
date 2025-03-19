@@ -15,7 +15,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import theme from '../../theme.ts';
 
 const Container = styled.ul`
-	background-color: ${props => props.backgroundColor};
+	background-color: ${props => props.backgroundcolor};
 	min-height: 50vh;
     min-width: 700px;
     padding: 30px 20px 20px 20px;
@@ -71,6 +71,57 @@ const StyledNoGuestsText = styled.p`
 export default function ListaConvidados() {
     const [openInvitations, openInvitationsChange] = useState(false);
     const [openGuest, openGuestChange] = useState(false);
+    const [invitations, setInvitations] = useState([{
+        id: uuidv4(),
+        nome: "Familia da Fulana",
+        telefone: "(67)999185885",
+        guests: [
+            {
+                guestId: uuidv4(),
+                name: "Beltrano",
+                phone: "(67)999185885",
+                group: "Amigo",
+                response: 0
+            },
+
+        ],
+        grupo: "Padrinho",
+        resposta: 0
+    },
+    {
+        id: uuidv4(),
+        nome: "Beltrano",
+        telefone: "(67)999185885",
+        guests: [
+            {
+                guestId: uuidv4(),
+                name: "Beltrano",
+                phone: "(67)999185885",
+                group: "Amigo",
+                response: 0
+            },
+
+        ],
+        grupo: "Amigo",
+        resposta: 0
+    },
+    {
+        id: uuidv4(),
+        nome: "Ciclano",
+        telefone: "(67)999185885",
+        guests: [
+            {
+                guestId: uuidv4(),
+                name: "Beltrano",
+                phone: "(67)999185885",
+                group: "Amigo",
+                response: 0
+            },
+
+        ],
+        grupo: null,
+        resposta: 0
+    }]);
     const [currentInvitation, opencurrentInvitation] = useState({
         id: "",
         nome: "",
@@ -180,7 +231,7 @@ export default function ListaConvidados() {
             resposta: 0
         }
     ];
-    
+
     let guestsList = [
         {
             id: uuidv4(),
@@ -227,11 +278,14 @@ export default function ListaConvidados() {
         let newInvitation = {
             id: uuidv4(),
             nome: newGuestName,
+            ddi: ddi,
             telefone: phone,
-            guests: [],
             grupo: group,
+            observations: observations,
+            guests: [],
             resposta: rsvp
         }
+        setInvitation(newInvitation);
         // closeInvitationsPopup()
     }
 
@@ -253,7 +307,7 @@ export default function ListaConvidados() {
         <ThemeProvider theme={theme}>
             <Tipografia variante="h1" componente="h1">Lista de Convidados</Tipografia>
             <Botao variant={"contained"} onClick={openInvitationsPopup}>Adicionar convite</Botao>
-            <Container backgroundColor={theme.palette.grey[50]}>
+            <Container backgroundcolor={theme.palette.grey[50]}>
                 <Grid2 container spacing={0} sx={{marginBottom: 2}}>
                     <Grid2 size={{ xs: 2, sm: 4, md: 4 }} sx={{margin: '0 0 0 10px'}}>
                         <Tipografia variante="body" componente="bodyBold">Convite</Tipografia>
@@ -265,7 +319,7 @@ export default function ListaConvidados() {
                         <Tipografia variante="body" componente="bodyBold">Respostas</Tipografia>
                     </Grid2>
                 </Grid2>
-                {invitationsList.map(convidado => <ItemLista 
+                {invitations.map(convidado => <ItemLista 
                     key={convidado.id}
                     convidado={convidado}
                 />)}

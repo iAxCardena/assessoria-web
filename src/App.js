@@ -8,13 +8,13 @@ const AppContainer = styled.div`
   height: 100vh;
   padding: 30px;
   overflow: auto;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${props => props.backgroundcolor};
 `
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <AppContainer backgroundColor={theme.palette.background.paper}>
+      <AppContainer backgroundcolor={theme.palette.background.paper}>
         <ListaConvidados/>
       </AppContainer>
     </ThemeProvider>

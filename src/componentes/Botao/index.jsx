@@ -7,18 +7,18 @@ const CustomButton = styled(ButtonMUI)`
   	&.MuiButton-contained {
       display: flex;
       width: -moz-max-content;
-      background-color: ${props => props.backgroundColor.main};
+      background-color: ${props => props.backgroundcolor.main};
       border-radius: 10px;
     };
     &:hover {
-		background-color: ${props => props.backgroundColor.dark}
+		background-color: ${props => props.backgroundcolor.dark}
     }
 `
 
 export const Botao = ({variant, children, ...props}) => {
     return(
       <ThemeProvider theme={theme}>
-			<CustomButton backgroundColor={theme.palette.primary} variant={variant} {...props}>{children}</CustomButton>
+			<CustomButton backgroundcolor={theme.palette.primary} variant={variant} {...props}>{children}</CustomButton>
       </ThemeProvider>
     );
 }
