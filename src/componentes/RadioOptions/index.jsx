@@ -26,14 +26,21 @@ const StyledOption = styled.div`
   background-color: ${(props) => props.current===props.option.id ? (props.option.color != null ? props.option.color : props.defaultColor.main) : "#f0eaea"};
 `
 
-export default function RadioOptions({options}) {
+export default function RadioOptions({options, onClick}) {
   const [current, setCurrent] = useState(0);
+
+  const handleSelectedItemChange = (value, optionId) => {
+    console.log(value)
+    setCurrent(optionId)
+    onClick(value)
+  }
+
   return (
     <ThemeProvider theme={theme}>
 		<StyledContainer>
 			{options.map(option => {
-				return <Tooltip title={option.hint}>
-					<StyledOption defaultColor={theme.palette.primary} current={current} option={option} key={option.id} onClick={() => setCurrent(option.id)}>{option.value}</StyledOption>
+				return <Tooltip key={option.id} title={option.hint}>
+					<StyledOption key={option.id} defaultColor={theme.palette.primary} current={current} option={option} onClick={() => handleSelectedItemChange(option.value, option.id)}>{option.label}</StyledOption>
 				</Tooltip>;
 			})}
 		</StyledContainer>

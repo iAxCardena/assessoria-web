@@ -10,6 +10,9 @@ const CardEstilizado = styled.li`
     padding: 10px;
     background-color: "#321321";
     display: block;
+    &:hover {
+        cursor: pointer;
+    }
 `
 const TextoEstilizado = styled.p`
     margin: 0;
@@ -40,26 +43,53 @@ const StyledCloseIcon = styled(CloseIcon)`
     margin: 0 4px 0 16px;
 `
 
-export const ItemLista = ({convidado}) => {
+export const ItemConvite = ({convite, onClick}) => {
+    let pendingGuests = 0
+    let confirmedGuests = 0
+    let canceledGuests = 0
+    console.log(convite)
+    convite.guests.forEach(guest => {
+        switch(guest.answer) {
+            case "pending":
+                pendingGuests += 1 
+                break
+            
+            case "confirmed":
+                confirmedGuests += 1
+                break
+
+            case "canceled":
+                canceledGuests += 1
+                break
+
+            default:
+                break
+        }
+    })
+
+    const handleInvitationClick = () => {
+        onClick(convite.id)
+    }
+
     return (
         <ThemeProvider theme={theme}>
         <Divider/>
-        <CardEstilizado>
+        <CardEstilizado onClick={() => handleInvitationClick()}>
             <Grid2 container spacing={{ xs: 2, md: 3 }}>
                 <Grid2 size={{ xs: 2, sm: 4, md: 4 }}>
-                    <TextoEstilizado>{convidado.nome}</TextoEstilizado>
-                    <TextoEstilizado color={"#908e8c"}>{convidado.telefone}</TextoEstilizado>
+                    <TextoEstilizado>{convite.name}</TextoEstilizado>
+                    <TextoEstilizado color={"#908e8c"}>{convite.phone}</TextoEstilizado>
                 </Grid2>
                 <Grid2 size={{ xs: 2, sm: 4, md: 4 }}>
-                    <TextoEstilizado>{convidado.grupo != null ? convidado.grupo : "-"}</TextoEstilizado>
+                    <TextoEstilizado>{convite.group != null ? convite.group : "-"}</TextoEstilizado>
                 </Grid2>
                 <Grid2 display={"flex"} alignItems={"center"} size={{ xs: 2, sm: 3, md: 3 }}>
                     <StyledPriorityHighIcon color={theme.palette.warning.main}/>
-                    0
+                    {pendingGuests}
                     <StyledCheckIcon color={theme.palette.success.main}/>
-                    0
+                    {confirmedGuests}
                     <StyledCloseIcon color={theme.palette.error.main}/>
-                    0
+                    {canceledGuests}
                 </Grid2>
                 <IconButton>
                     <MoreHorizIcon />

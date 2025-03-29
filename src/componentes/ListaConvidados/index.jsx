@@ -1,8 +1,8 @@
 import styled from "@emotion/styled/macro";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, TextField, Button, Tooltip, ThemeProvider } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, TextField, Button, Tooltip, ThemeProvider, Divider } from "@mui/material";
 import { Tipografia } from "../Tipografia";
 import { Botao } from "../Botao";
-import { ItemLista } from "./ItemLista";
+import { ItemConvite } from "./ItemConvite/index.jsx";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
@@ -13,6 +13,7 @@ import RadioOptions from "../RadioOptions"
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CheckIcon from '@mui/icons-material/Check';
 import theme from '../../theme.ts';
+import ItemConvidado from "./ItemConvidado/index.jsx";
 
 const Container = styled.ul`
 	background-color: ${props => props.backgroundcolor};
@@ -71,65 +72,41 @@ const StyledNoGuestsText = styled.p`
 export default function ListaConvidados() {
     const [openInvitations, openInvitationsChange] = useState(false);
     const [openGuest, openGuestChange] = useState(false);
-    const [invitations, setInvitations] = useState([{
-        id: uuidv4(),
-        nome: "Familia da Fulana",
-        telefone: "(67)999185885",
-        guests: [
-            {
-                guestId: uuidv4(),
-                name: "Beltrano",
-                phone: "(67)999185885",
-                group: "Amigo",
-                response: 0
-            },
-
-        ],
-        grupo: "Padrinho",
-        resposta: 0
-    },
-    {
-        id: uuidv4(),
-        nome: "Beltrano",
-        telefone: "(67)999185885",
-        guests: [
-            {
-                guestId: uuidv4(),
-                name: "Beltrano",
-                phone: "(67)999185885",
-                group: "Amigo",
-                response: 0
-            },
-
-        ],
-        grupo: "Amigo",
-        resposta: 0
-    },
-    {
-        id: uuidv4(),
-        nome: "Ciclano",
-        telefone: "(67)999185885",
-        guests: [
-            {
-                guestId: uuidv4(),
-                name: "Beltrano",
-                phone: "(67)999185885",
-                group: "Amigo",
-                response: 0
-            },
-
-        ],
-        grupo: null,
-        resposta: 0
-    }]);
-    const [currentInvitation, opencurrentInvitation] = useState({
-        id: "",
-        nome: "",
-        telefone: "",
-        guests: [],
-        grupo: "",
-        resposta: 0
-    });
+    const [invitations, setInvitations] = useState([
+        {
+            id: uuidv4(),
+            name: "Familia do Fulano",
+            ddi: "+55",
+            phone: "(11) 99999999",
+            group: "Amigos do Noivo",
+            observations: "Sei la",
+            guests: [
+                {
+                    id: uuidv4(),
+                    name: "Fulano",
+                    answer: "confirmed",
+                    table: "Mesa A",
+                    gender: "Masculino",
+                    ageGroup: "Adulto",
+                    pagamento: "Inteira",
+                    rg: "111111111",
+                    cpf: "22222222222"
+                },
+                {
+                    id: uuidv4(),
+                    name: "Ciclana",
+                    answer: "confirmed",
+                    table: "Mesa A",
+                    gender: "Feminino",
+                    ageGroup: "Adulto",
+                    pagamento: "Inteira",
+                    rg: "111111111",
+                    cpf: "22222222222"
+                },
+            ]
+        }
+    ]);
+    const [invitationGuestsList, setInvitationGuestsList] = useState([]);
     const [invitationName, setInvitationName] = useState('');
     const [ddi, setDdi] = useState('55');
     const [phone, setPhone] = useState('');
@@ -139,7 +116,7 @@ export default function ListaConvidados() {
     const [rsvp, setRsvp] = useState('pending');
     const [table, setTable] = useState('');
     const [gender, setGender] = useState('');
-    const [age, setAge] = useState('');
+    const [ageGroup, setAgeGroup] = useState('');
     const [paymentType, setPaymentType] = useState('');
     const [rg, setRg] = useState('');
     const [cpf, setCpf] = useState('');
@@ -155,7 +132,23 @@ export default function ListaConvidados() {
             value: 'Mesa C', label: 'Mesa C'
         },
     ]
-
+    const ageGroupList = [
+        {
+            value: 'Adulto', label: 'Adulto'
+        },
+        {
+            value: 'Adolescente', label: 'Adolescente'
+        },
+        {
+            value: 'Criança', label: 'Criança'
+        },
+        {
+            value: 'Criança de colo', label: 'Criança de colo'
+        },
+        {
+            value: 'Idoso', label: 'Idoso'
+        },
+    ]
     const groupList = [
         {
             value: 'Amigos', label: 'Amigos'
@@ -173,90 +166,12 @@ export default function ListaConvidados() {
             value: 'Família do Noivo', label: 'Família do Noivo'
         },
     ]
-
-    /** TODO 
-     * adicionar guests em cada invitation
-     * permitir clicar nos convites
-     * permitir editar convites */
-    let invitationsList = [
-        {
-            id: uuidv4(),
-            nome: "Familia da Fulana",
-            telefone: "(67)999185885",
-            guests: [
-                {
-                    guestId: uuidv4(),
-                    name: "Beltrano",
-                    phone: "(67)999185885",
-                    group: "Amigo",
-                    response: 0
-                },
-
-            ],
-            grupo: "Padrinho",
-            resposta: 0
-        },
-        {
-            id: uuidv4(),
-            nome: "Beltrano",
-            telefone: "(67)999185885",
-            guests: [
-                {
-                    guestId: uuidv4(),
-                    name: "Beltrano",
-                    phone: "(67)999185885",
-                    group: "Amigo",
-                    response: 0
-                },
-
-            ],
-            grupo: "Amigo",
-            resposta: 0
-        },
-        {
-            id: uuidv4(),
-            nome: "Ciclano",
-            telefone: "(67)999185885",
-            guests: [
-                {
-                    guestId: uuidv4(),
-                    name: "Beltrano",
-                    phone: "(67)999185885",
-                    group: "Amigo",
-                    response: 0
-                },
-
-            ],
-            grupo: null,
-            resposta: 0
+   
+    const openInvitationsPopup = (editMode, inviteId = null) => {
+        console.log(editMode, inviteId)
+        if(editMode) {
+            fillInviteDialogFields(invitations.find(invitation => invitation.id === inviteId))
         }
-    ];
-
-    let guestsList = [
-        {
-            id: uuidv4(),
-            nome: "Fulano",
-            telefone: "(67)999185885",
-            grupo: "Padrinho",
-            resposta: 0
-        },
-        {
-            id: uuidv4(),
-            nome: "Beltrano",
-            telefone: "(67)999185885",
-            grupo: "Amigo",
-            resposta: 0
-        },
-        {
-            id: uuidv4(),
-            nome: "Ciclano",
-            telefone: "(67)999185885",
-            grupo: null,
-            resposta: 0
-        }
-    ];
-
-    const openInvitationsPopup = () => {
         openInvitationsChange(true);
     }
 
@@ -272,22 +187,30 @@ export default function ListaConvidados() {
         openGuestChange(false);
     }
 
+    const fillInviteDialogFields = (invite) => {
+        setInvitationGuestsList(invite.guests)
+        setInvitationName(invite.name)
+        setDdi(invite.ddi)
+        setPhone(invite.phone)
+        setGroup(invite.group)
+        setObservations(invite.observations)
+    }
+
     const addInvitation = (event) => {
         event.preventDefault();
         var newInvitation = {
             id: uuidv4(),
-            nome: invitationName,
+            name: invitationName,
             ddi: ddi,
-            telefone: phone,
-            grupo: group,
+            phone: phone,
+            group: group,
             observations: observations,
-            guests: [],
-            resposta: rsvp
+            guests: invitationGuestsList
         }
         setInvitations([...invitations, newInvitation]);
-        clearDialogFields()
-        closeInvitationsPopup()
-        console.log(invitations.length)
+        clearDialogFields();
+        closeInvitationsPopup();
+        setInvitationGuestsList([]);
     }
 
     const clearDialogFields = () => {
@@ -298,24 +221,45 @@ export default function ListaConvidados() {
         setObservations('')
     }
 
-    //TODO arrumar a lista de convites e a lista de convidados
     const addGuestToInvitation = (event) => {
         event.preventDefault();
-        console.log("addGuestToInvitation")
-        currentInvitation.guests.push({
+        let newGuest = {
             id: uuidv4(),
-            nome: newGuestName,
-            telefone: phone,
-            grupo: group,
-            resposta: rsvp
-        })
-        // closeGuestPopup()
+            name: newGuestName,
+            answer: rsvp,
+            table: table,
+            gender: gender,
+            ageGroup: ageGroup,
+            pagamento: paymentType,
+            rg: rg,
+            cpf: cpf
+        }
+        setInvitationGuestsList([...invitationGuestsList, newGuest])
+        cleanGuestDialogFields()
+        closeGuestPopup()
+    }
+
+    const cleanGuestDialogFields = () => {
+        setNewGuestName('')
+        setRsvp('')
+        setTable('')
+        setGender('')
+        setAgeGroup('')
+        setPaymentType('')
+        setRg('')
+        setCpf('')
+    }
+
+    const changeGuestAnswer = (answer, guestId) => {
+        console.log(answer)
+        let guestToUpdate = invitationGuestsList.findIndex(guest => guest.id === guestId)
+        invitationGuestsList[guestToUpdate].answer = answer
     }
 
     return(
         <ThemeProvider theme={theme}>
             <Tipografia variante="h1" componente="h1">Lista de Convidados</Tipografia>
-            <Botao variant={"contained"} onClick={openInvitationsPopup}>Adicionar convite</Botao>
+            <Botao variant={"contained"} onClick={() => openInvitationsPopup(false)}>Adicionar convite</Botao>
             <Container backgroundcolor={theme.palette.grey[50]}>
                 <Grid2 container spacing={0} sx={{marginBottom: 2}}>
                     <Grid2 size={{ xs: 2, sm: 4, md: 4 }} sx={{margin: '0 0 0 10px'}}>
@@ -328,12 +272,15 @@ export default function ListaConvidados() {
                         <Tipografia variante="body" componente="bodyBold">Respostas</Tipografia>
                     </Grid2>
                 </Grid2>
-                {invitations.map(convidado => <ItemLista 
-                    key={convidado.id}
-                    convidado={convidado}
+                <Divider />
+                {invitations.map(convite => <ItemConvite
+                    key={convite.id}
+                    convite={convite}
+                    onClick={(inviteId) => openInvitationsPopup(true, inviteId)}
                 />)}
             </Container>
 
+            {/**Dialog do Convite */}
             <Dialog slotProps={{
             paper: {
                 component: 'form',
@@ -372,13 +319,14 @@ export default function ListaConvidados() {
                     <StyledTextField value={observations} onChange={e => setObservations(e.target.value)} multiline rows={4} fullWidth></StyledTextField>
                 </StyledDialogContent>
                 <DialogSectionDivider>Convidados</DialogSectionDivider>
-                {currentInvitation === null ?
+                {invitationGuestsList.length === 0 ?
                     <StyledNoGuestsText variante="body" componente="body">Nenhum convidado cadastrado. Informe os dados de pelo menos um convidado para este convite. </StyledNoGuestsText> 
-                : 
+                :
                     <StyledDialogContent>
-                        {currentInvitation.guests.map(convidado => <ItemLista 
-                            key={convidado.id}
-                            convidado={convidado}
+                        {invitationGuestsList.map(guest => <ItemConvidado
+                            key={guest.id}
+                            convidado={guest}
+                            onChange={(answer, guestId) => changeGuestAnswer(answer, guestId)}
                         />)}
                     </StyledDialogContent>
                 }
@@ -388,7 +336,7 @@ export default function ListaConvidados() {
                 </DialogActions>
             </Dialog>
 
-
+            {/**Dialog do Convidado */}
             <Dialog slotProps={{
             paper: {
                 component: 'form',
@@ -418,7 +366,14 @@ export default function ListaConvidados() {
                                     <StyledInfoButton color="primary"/>
                                 </Tooltip>
                             </StyledLabel>
-                            <RadioOptions value={rsvp} onChange={setRsvp} options={[{id: 1, value: <PriorityHighIcon/>, hint:'Pendente', color: theme.palette.warning.main},{id: 2, value: <CheckIcon/>, hint:'Confirmado', color: theme.palette.success.main},{id: 3, value: <CloseIcon/>, hint:'Não irá comparecer', color: theme.palette.error.main}]}/>
+                            <RadioOptions value={rsvp} 
+                                onClick={setRsvp} 
+                                options={[
+                                    {id: 1, value: "pending", label: <PriorityHighIcon/>, hint:'Pendente', color: theme.palette.warning.main},
+                                    {id: 2, value: "confirmed", label: <CheckIcon/>, hint:'Confirmado', color: theme.palette.success.main},
+                                    {id: 3, value: "canceled", label: <CloseIcon/>, hint:'Cancelado', color: theme.palette.error.main}
+                                ]}
+                            />
                         </Grid2>
                     </Grid2>
                     <Grid2 container spacing={2}>
@@ -428,17 +383,31 @@ export default function ListaConvidados() {
                         </Grid2>
                         <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
                             <StyledLabel>Gênero:</StyledLabel>
-                            <RadioOptions value={gender} onChange={setGender} options={[{id: 1, value: 'Masculino'},{id: 2, value: 'Feminino'},{id: 3, value: 'Não binário'}]}/>
+                            <RadioOptions value={gender} 
+                                onClick={setGender} 
+                                options={[
+                                    {id: 1, value: 'Masculino', label: 'Masculino'},
+                                    {id: 2, value: 'Feminino', label: 'Feminino'},
+                                    {id: 3, value: 'Não binário', label: 'Não binário'}
+                                ]}
+                            />
                         </Grid2>
                     </Grid2>
                     <Grid2 container spacing={2}>
                         <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
                             <StyledLabel>Faixa etária: </StyledLabel>
-                            <StyledTextField value={age} onChange={e => setAge(e.target.value)} variant="outlined" label=""></StyledTextField>
+                            <ListaSuspensa value={ageGroupList} onChange={setAgeGroup} itens={ageGroupList}/>
                         </Grid2>
                         <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
                             <StyledLabel>Pagamento/custo por convidado:</StyledLabel>
-                            <RadioOptions value={paymentType} onChange={setPaymentType} options={[{id: 1, value: 'Inteira'},{id: 2, value: 'Meia'},{id: 3, value: 'Gratuita'}]}/>
+                            <RadioOptions value={paymentType} 
+                                onClick={setPaymentType} 
+                                options={[
+                                    {id: 1, value: 'Inteira', label: 'Inteira'},
+                                    {id: 2, value: 'Meia', label: 'Meia'},
+                                    {id: 3, value: 'Gratuita', label: 'Gratuita'}
+                                ]}
+                            />
                         </Grid2>
                     </Grid2>
                     <Grid2 container spacing={2}>
