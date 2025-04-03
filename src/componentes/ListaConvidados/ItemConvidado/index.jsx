@@ -32,7 +32,7 @@ const StyledPriorityHighIcon = styled(PriorityHighIcon)`
     stroke: white;
     stroke-width: 2px;
     margin: 0 0 0 -25px;
-    :hover {
+    &:hover {
         cursor: pointer;
     }
 `
@@ -46,7 +46,7 @@ const StyledCheckIcon = styled(CheckIcon)`
     stroke: white;
     stroke-width: 2px;
     margin: 0 0 0 5px;
-    :hover {
+    &:hover {
         cursor: pointer;
     }
 `
@@ -60,24 +60,29 @@ const StyledCloseIcon = styled(CloseIcon)`
     stroke: white;
     stroke-width: 2px;
     margin: 0 0 0 5px;
-    :hover {
+    &:hover {
         cursor: pointer;
     }
 `
 
-export default function ItemConvidado({convidado, onChange}) {
+export default function ItemConvidado({convidado, onClick, onChange}) {
     const [currentAnswer, setCurrentAnswer] = useState(convidado.answer);
     
     const changeGuestAnswer = (event) => {
+        event.stopPropagation()
         if(event.target.slot) {
             setCurrentAnswer(event.target.slot)
             onChange(event.target.slot, convidado.id)
         }
     }
 
+    const handleGuestClick = () => {
+        onClick(convidado.id)
+    }
+
     return (
         <ThemeProvider theme={theme}>
-            <CardEstilizado bordercolor={theme.palette.grey[300]}>
+            <CardEstilizado onClick={handleGuestClick} bordercolor={theme.palette.grey[300]}>
                 <Grid2 container spacing={{ xs: 2, md: 3 }}>
                     <Grid2 size={{ xs: 4, sm: 7, md: 7 }}>
                         <TextoEstilizado>{convidado.name}</TextoEstilizado>

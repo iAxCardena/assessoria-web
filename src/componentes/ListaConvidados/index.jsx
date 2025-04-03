@@ -72,11 +72,13 @@ const StyledNoGuestsText = styled.p`
 export default function ListaConvidados() {
     const [openInvitations, openInvitationsChange] = useState(false);
     const [openGuest, openGuestChange] = useState(false);
+    const [inviteEditMode, setInviteEditMode] = useState(false);
+    const [guestEditMode, setGuestEditMode] = useState(false);
     const [invitations, setInvitations] = useState([
         {
             id: uuidv4(),
             name: "Familia do Fulano",
-            ddi: "+55",
+            ddi: "55",
             phone: "(11) 99999999",
             group: "Amigos do Noivo",
             observations: "Sei la",
@@ -107,11 +109,13 @@ export default function ListaConvidados() {
         }
     ]);
     const [invitationGuestsList, setInvitationGuestsList] = useState([]);
+    const [invitationId, setInvitationId] = useState('');
     const [invitationName, setInvitationName] = useState('');
     const [ddi, setDdi] = useState('55');
     const [phone, setPhone] = useState('');
     const [group, setGroup] = useState('');
     const [observations, setObservations] = useState('');
+    const [newGuestId, setNewGuestId] = useState('');
     const [newGuestName, setNewGuestName] = useState('');
     const [rsvp, setRsvp] = useState('pending');
     const [table, setTable] = useState('');
@@ -167,9 +171,9 @@ export default function ListaConvidados() {
         },
     ]
    
-    const openInvitationsPopup = (editMode, inviteId = null) => {
-        console.log(editMode, inviteId)
-        if(editMode) {
+    const openInvitationsPopup = (inviteId = null) => {
+        if(inviteId != null) {
+            setInviteEditMode(true)
             fillInviteDialogFields(invitations.find(invitation => invitation.id === inviteId))
         }
         openInvitationsChange(true);
@@ -177,17 +181,28 @@ export default function ListaConvidados() {
 
     const closeInvitationsPopup = () => {
         openInvitationsChange(false);
+        clearDialogFields();
+        cleanGuestDialogFields();
+        setInvitationGuestsList([]);
+        setInviteEditMode(false);
     }
 
-    const openGuestPopup = () => {
+    const openGuestPopup = (guestId = null) => {
+        if(guestId != null) {
+            setGuestEditMode(true)
+            fillGuestDialogFields(invitationGuestsList.find(guest => guest.id === guestId))
+        }
         openGuestChange(true);
     }
 
     const closeGuestPopup = () => {
+        cleanGuestDialogFields();
         openGuestChange(false);
+        setGuestEditMode(false);
     }
 
     const fillInviteDialogFields = (invite) => {
+        setInvitationId(invite.id)
         setInvitationGuestsList(invite.guests)
         setInvitationName(invite.name)
         setDdi(invite.ddi)
@@ -196,24 +211,49 @@ export default function ListaConvidados() {
         setObservations(invite.observations)
     }
 
+    const fillGuestDialogFields = (guest) => {
+        setNewGuestId(guest.id)
+        setNewGuestName(guest.name)
+        setRsvp(guest.answer)
+        setTable(guest.table)
+        setGender(guest.gender)
+        setAgeGroup(guest.ageGroup)
+        setPaymentType(guest.pagamento)
+        setRg(guest.rg)
+        setCpf(guest.cpf)
+    }
+    
     const addInvitation = (event) => {
         event.preventDefault();
-        var newInvitation = {
-            id: uuidv4(),
-            name: invitationName,
-            ddi: ddi,
-            phone: phone,
-            group: group,
-            observations: observations,
-            guests: invitationGuestsList
+        
+        if(inviteEditMode) {
+            var inviteToUpdate = invitations.findIndex(invitation => invitation.id === invitationId)
+            invitations[inviteToUpdate] = {
+                id: invitationId,
+                name: invitationName,
+                ddi: ddi,
+                phone: phone,
+                group: group,
+                observations: observations,
+                guests: invitationGuestsList
+            }
+        } else {
+            var newInvitation = {
+                id: uuidv4(),
+                name: invitationName,
+                ddi: ddi,
+                phone: phone,
+                group: group,
+                observations: observations,
+                guests: invitationGuestsList
+            }
+            setInvitations([...invitations, newInvitation]);
         }
-        setInvitations([...invitations, newInvitation]);
-        clearDialogFields();
         closeInvitationsPopup();
-        setInvitationGuestsList([]);
     }
 
     const clearDialogFields = () => {
+        setInvitationId('')
         setInvitationName('')
         setDdi('55')
         setPhone('')
@@ -223,23 +263,38 @@ export default function ListaConvidados() {
 
     const addGuestToInvitation = (event) => {
         event.preventDefault();
-        let newGuest = {
-            id: uuidv4(),
-            name: newGuestName,
-            answer: rsvp,
-            table: table,
-            gender: gender,
-            ageGroup: ageGroup,
-            pagamento: paymentType,
-            rg: rg,
-            cpf: cpf
+        if(guestEditMode) {
+            let guestToUpdate = invitationGuestsList.findIndex(guest => guest.id === newGuestId)
+            invitationGuestsList[guestToUpdate] = {
+                id: newGuestId,
+                name: newGuestName,
+                answer: rsvp,
+                table: table,
+                gender: gender,
+                ageGroup: ageGroup,
+                pagamento: paymentType,
+                rg: rg,
+                cpf: cpf
+            }
+        } else {
+            let newGuest = {
+                id: uuidv4(),
+                name: newGuestName,
+                answer: rsvp,
+                table: table,
+                gender: gender,
+                ageGroup: ageGroup,
+                pagamento: paymentType,
+                rg: rg,
+                cpf: cpf
+            }
+            setInvitationGuestsList([...invitationGuestsList, newGuest]);
         }
-        setInvitationGuestsList([...invitationGuestsList, newGuest])
-        cleanGuestDialogFields()
-        closeGuestPopup()
+        closeGuestPopup();
     }
 
     const cleanGuestDialogFields = () => {
+        setNewGuestId('')
         setNewGuestName('')
         setRsvp('')
         setTable('')
@@ -251,7 +306,6 @@ export default function ListaConvidados() {
     }
 
     const changeGuestAnswer = (answer, guestId) => {
-        console.log(answer)
         let guestToUpdate = invitationGuestsList.findIndex(guest => guest.id === guestId)
         invitationGuestsList[guestToUpdate].answer = answer
     }
@@ -259,7 +313,7 @@ export default function ListaConvidados() {
     return(
         <ThemeProvider theme={theme}>
             <Tipografia variante="h1" componente="h1">Lista de Convidados</Tipografia>
-            <Botao variant={"contained"} onClick={() => openInvitationsPopup(false)}>Adicionar convite</Botao>
+            <Botao variant={"contained"} onClick={() => openInvitationsPopup()}>Adicionar convite</Botao>
             <Container backgroundcolor={theme.palette.grey[50]}>
                 <Grid2 container spacing={0} sx={{marginBottom: 2}}>
                     <Grid2 size={{ xs: 2, sm: 4, md: 4 }} sx={{margin: '0 0 0 10px'}}>
@@ -276,7 +330,7 @@ export default function ListaConvidados() {
                 {invitations.map(convite => <ItemConvite
                     key={convite.id}
                     convite={convite}
-                    onClick={(inviteId) => openInvitationsPopup(true, inviteId)}
+                    onClick={(inviteId) => openInvitationsPopup(inviteId)}
                 />)}
             </Container>
 
@@ -326,11 +380,12 @@ export default function ListaConvidados() {
                         {invitationGuestsList.map(guest => <ItemConvidado
                             key={guest.id}
                             convidado={guest}
+                            onClick={(guestId) => openGuestPopup(guestId)}
                             onChange={(answer, guestId) => changeGuestAnswer(answer, guestId)}
                         />)}
                     </StyledDialogContent>
                 }
-                <StyledBotao variant={"contained"} onClick={openGuestPopup}>Adicionar convidados</StyledBotao>
+                <StyledBotao variant={"contained"} onClick={() => openGuestPopup()}>Adicionar convidados</StyledBotao>
                 <DialogActions color="primary" sx={{padding: 0}}>
                     <Button type="submit" fullWidth color="primary" variant="contained">Salvar</Button>
                 </DialogActions>
@@ -366,8 +421,8 @@ export default function ListaConvidados() {
                                     <StyledInfoButton color="primary"/>
                                 </Tooltip>
                             </StyledLabel>
-                            <RadioOptions value={rsvp} 
-                                onClick={setRsvp} 
+                            <RadioOptions value={rsvp}
+                                onClick={setRsvp}
                                 options={[
                                     {id: 1, value: "pending", label: <PriorityHighIcon/>, hint:'Pendente', color: theme.palette.warning.main},
                                     {id: 2, value: "confirmed", label: <CheckIcon/>, hint:'Confirmado', color: theme.palette.success.main},
@@ -396,7 +451,7 @@ export default function ListaConvidados() {
                     <Grid2 container spacing={2}>
                         <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
                             <StyledLabel>Faixa etária: </StyledLabel>
-                            <ListaSuspensa value={ageGroupList} onChange={setAgeGroup} itens={ageGroupList}/>
+                            <ListaSuspensa value={ageGroup} onChange={setAgeGroup} itens={ageGroupList}/>
                         </Grid2>
                         <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
                             <StyledLabel>Pagamento/custo por convidado:</StyledLabel>

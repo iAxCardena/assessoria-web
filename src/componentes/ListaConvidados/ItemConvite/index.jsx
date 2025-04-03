@@ -47,7 +47,6 @@ export const ItemConvite = ({convite, onClick}) => {
     let pendingGuests = 0
     let confirmedGuests = 0
     let canceledGuests = 0
-    console.log(convite)
     convite.guests.forEach(guest => {
         switch(guest.answer) {
             case "pending":

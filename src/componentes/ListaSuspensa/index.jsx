@@ -58,6 +58,7 @@ export default function ListaSuspensa({label = "", value, onChange, selectId, it
                         height: '8px',
                     }}}
                     options={itens}
+                    value={value !== undefined ? value : null}
                     onChange={(event) => handleSelectedItemChange(event)}
                     label={label}
                     renderInput={(params) => <TextField label={label} key={params.value} {...params} />}
