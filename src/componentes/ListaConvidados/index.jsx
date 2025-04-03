@@ -27,9 +27,9 @@ const StyledLabel = styled.p`
     margin: 10px 0;
 `
 
-const StyledDialogContent = styled(DialogContent)(() => ({
-    padding: '0 20px'
-}))
+const StyledDialogContent = styled(DialogContent)`
+    padding: 0 20px;
+`
 
 const StyledBotao = styled(Botao)`
     text-align: center;
@@ -44,17 +44,21 @@ const DialogSectionDivider = styled.p`
     margin: 0;
 `
 
-const StyledDialogTitle = styled(DialogTitle)(() => ({
-    padding: '10px',
-}))
+const StyledDialogTitle = styled(DialogTitle)`
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 10px;
+`
 
-const StyledTextField = styled(TextField)(() => ({
-    display: 'flex',
-    margin: '0 0 20px 0',
-    '& input': {
-        height: '8px'
+const StyledTextField = styled(TextField)`
+    display: flex;
+    margin: 0 0 15px 0;
+    & input {
+        height: 8px;
     }
-}))
+`
 
 const StyledInfoButton = styled(InfoOutlinedIcon)`
     width: 16px;
@@ -341,11 +345,12 @@ export default function ListaConvidados() {
                 onSubmit: (event) => addInvitation(event),
             }
             }} sx={{
+                minWidth: '800px',
                 '& .MuiPaper-root': {
                 background: theme.palette.common.white
                 }
             }} fullWidth open={openInvitations} onClose={closeInvitationsPopup} maxWidth="md">
-                <StyledDialogTitle justifyContent={'center'}>
+                <StyledDialogTitle>
                     Adicionar convite
                     <IconButton style={{float:'right'}} onClick={closeInvitationsPopup}>
                         <CloseIcon sx={{ color: `grey[200]`}}/>
@@ -398,6 +403,7 @@ export default function ListaConvidados() {
                 onSubmit: (event) => addGuestToInvitation(event),
             }
             }} sx={{
+                minWidth: '800px',
                 '& .MuiPaper-root': {
                 background: theme.palette.common.white
                 }
@@ -408,6 +414,7 @@ export default function ListaConvidados() {
                         <CloseIcon sx={{ color: `grey[200]`}}/>
                     </IconButton>
                 </StyledDialogTitle>
+                <Divider/>
                 <StyledDialogContent>
                     <Grid2 container spacing={2}>
                         <Grid2 size={{ xs: 9, sm: 9, md: 9 }}>

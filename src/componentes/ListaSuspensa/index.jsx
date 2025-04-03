@@ -61,7 +61,7 @@ export default function ListaSuspensa({label = "", value, onChange, selectId, it
                     value={value !== undefined ? value : null}
                     onChange={(event) => handleSelectedItemChange(event)}
                     label={label}
-                    renderInput={(params) => <TextField label={label} key={params.value} {...params} />}
+                    renderInput={(params) => <TextField sx={{"& label": {top: '-0.4rem'}}} label={label} key={params.value} {...params} />}
                 />
             </>
         )
