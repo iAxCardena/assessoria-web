@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from "@emotion/styled/macro";
 import theme from '../../../theme.ts';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Grid2, IconButton, ThemeProvider, Tooltip } from "@mui/material"
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CheckIcon from '@mui/icons-material/Check';
@@ -14,9 +15,6 @@ const CardEstilizado = styled.li`
     border-color: ${props => props.bordercolor};
     border-radius: 5px;
     display: block;
-    &:hover {
-        cursor: pointer;
-    }
 `
 const TextoEstilizado = styled.p`
     margin: 0;
@@ -64,44 +62,62 @@ const StyledCloseIcon = styled(CloseIcon)`
         cursor: pointer;
     }
 `
+const StyledIconButton = styled(IconButton)`
+    display: flex;
+    align-self: center;
+    width: 30px;
+    height: 30px;
+    background-color: ${props => props.backgroundcolor[100]};
+    &:hover {
+        cursor: pointer;
+    }
+`
 
-export default function ItemConvidado({convidado, onClick, onChange}) {
-    const [currentAnswer, setCurrentAnswer] = useState(convidado.answer);
-    
+export default function ItemConvidado({convidado, onClick, onDelete, onChange}) {
     const changeGuestAnswer = (event) => {
         event.stopPropagation()
         if(event.target.slot) {
-            setCurrentAnswer(event.target.slot)
             onChange(event.target.slot, convidado.id)
         }
     }
 
-    const handleGuestClick = () => {
+    const handleEditGuestClick = () => {
         onClick(convidado.id)
+    }
+
+    const handleDeleteGuestClick = () => {
+        onDelete(convidado.id)
     }
 
     return (
         <ThemeProvider theme={theme}>
-            <CardEstilizado onClick={handleGuestClick} bordercolor={theme.palette.grey[300]}>
+            <CardEstilizado bordercolor={theme.palette.grey[300]}>
                 <Grid2 container spacing={{ xs: 2, md: 3 }}>
-                    <Grid2 size={{ xs: 4, sm: 7, md: 7 }}>
+                    <Grid2 size={{ xs: 4, sm: 6, md: 6 }}>
                         <TextoEstilizado>{convidado.name}</TextoEstilizado>
                         <TextoEstilizado color={"#908e8c"}>{convidado.ageGroup} - {convidado.gender}</TextoEstilizado>
                     </Grid2>
                     <Grid2 display={"flex"} alignItems={"center"} size={{ xs: 2, sm: 4, md: 4 }}>
                         <Tooltip title={"Pendente"}>
-                            <StyledPriorityHighIcon currentanswer={currentAnswer} onClick={e => changeGuestAnswer(e)} slot={"pending"} defaultcolor={theme.palette.background.paper} color={theme.palette.warning.main}/>
+                            <StyledPriorityHighIcon currentanswer={convidado.answer} onClick={e => changeGuestAnswer(e)} slot={"pending"} defaultcolor={theme.palette.background.paper} color={theme.palette.warning.main}/>
                         </Tooltip>
                         <Tooltip title={"Confirmado"}>
-                            <StyledCheckIcon currentanswer={currentAnswer} onClick={e => changeGuestAnswer(e)} slot={"confirmed"} defaultcolor={theme.palette.background.paper} color={theme.palette.success.main}/>
+                            <StyledCheckIcon currentanswer={convidado.answer} onClick={e => changeGuestAnswer(e)} slot={"confirmed"} defaultcolor={theme.palette.background.paper} color={theme.palette.success.main}/>
                         </Tooltip>
                         <Tooltip title={"Cancelado"}>
-                            <StyledCloseIcon currentanswer={currentAnswer} onClick={e => changeGuestAnswer(e)} slot={"canceled"} defaultcolor={theme.palette.background.paper} color={theme.palette.error.main}/>
+                            <StyledCloseIcon currentanswer={convidado.answer} onClick={e => changeGuestAnswer(e)} slot={"canceled"} defaultcolor={theme.palette.background.paper} color={theme.palette.error.main}/>
                         </Tooltip>
                     </Grid2>
-                    <IconButton>
-                        <MoreHorizIcon />
-                    </IconButton>
+                    <StyledIconButton onClick={handleEditGuestClick} backgroundcolor={theme.palette.grey}>
+                        <Tooltip title="Editar convidado">
+                            <EditNoteIcon />
+                        </Tooltip>
+                    </StyledIconButton>
+                    <StyledIconButton onClick={handleDeleteGuestClick} backgroundcolor={theme.palette.grey}>
+                        <Tooltip title="Excluir convidado">
+                            <DeleteIcon />
+                        </Tooltip>
+                    </StyledIconButton>
                 </Grid2>
             </CardEstilizado>
         </ThemeProvider>

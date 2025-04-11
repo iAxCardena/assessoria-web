@@ -280,6 +280,7 @@ export default function ListaConvidados() {
                 rg: rg,
                 cpf: cpf
             }
+            setInvitationGuestsList([...invitationGuestsList])
         } else {
             let newGuest = {
                 id: uuidv4(),
@@ -310,8 +311,15 @@ export default function ListaConvidados() {
     }
 
     const changeGuestAnswer = (answer, guestId) => {
-        let guestToUpdate = invitationGuestsList.findIndex(guest => guest.id === guestId)
-        invitationGuestsList[guestToUpdate].answer = answer
+        let newInvitationGuestsList = [...invitationGuestsList]
+        let guestToUpdate = newInvitationGuestsList.findIndex(guest => guest.id === guestId)
+        newInvitationGuestsList[guestToUpdate].answer = answer
+        setInvitationGuestsList([...newInvitationGuestsList])
+    }
+
+    const removeGuestFromInvite = (guestId) => {
+        let newinvitationGuestsList = invitationGuestsList.filter(guest => guest.id !== guestId)
+        setInvitationGuestsList([...newinvitationGuestsList])
     }
 
     return(
@@ -386,6 +394,7 @@ export default function ListaConvidados() {
                             key={guest.id}
                             convidado={guest}
                             onClick={(guestId) => openGuestPopup(guestId)}
+                            onDelete={(guestId) => removeGuestFromInvite(guestId)}
                             onChange={(answer, guestId) => changeGuestAnswer(answer, guestId)}
                         />)}
                     </StyledDialogContent>
