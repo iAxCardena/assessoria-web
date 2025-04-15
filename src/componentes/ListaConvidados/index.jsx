@@ -1,5 +1,5 @@
 import styled from "@emotion/styled/macro";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, TextField, Button, Tooltip, ThemeProvider, Divider } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, TextField, Button, Tooltip, ThemeProvider, Divider, Tabs, Tab } from "@mui/material";
 import { Tipografia } from "../Tipografia";
 import { Botao } from "../Botao";
 import { ItemConvite } from "./ItemConvite/index.jsx";
@@ -14,6 +14,8 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CheckIcon from '@mui/icons-material/Check';
 import theme from '../../theme.ts';
 import ItemConvidado from "./ItemConvidado/index.jsx";
+import TabPanel from "../TabPanel/index.jsx";
+import QRCode from 'qrcode';
 
 const Container = styled.ul`
 	background-color: ${props => props.backgroundcolor};
@@ -34,7 +36,10 @@ const StyledDialogContent = styled(DialogContent)`
 const StyledBotao = styled(Botao)`
     text-align: center;
     align-self: center;
-    margin: 20px 20px 40px 20px;
+    margin: 20px 20px 20px 20px;
+    :hover {
+        color: white;
+    }
 `
 
 const DialogSectionDivider = styled.p`
@@ -54,10 +59,15 @@ const StyledDialogTitle = styled(DialogTitle)`
 
 const StyledTextField = styled(TextField)`
     display: flex;
-    margin: 0 0 15px 0;
+    margin: 0 0 10px 0;
     & input {
-        height: 8px;
+        height: 6px;
     }
+`
+
+const StyledQrCode = styled.img`
+    display: flex;
+    width: 300px;
 `
 
 const StyledInfoButton = styled(InfoOutlinedIcon)`
@@ -71,6 +81,15 @@ const StyledNoGuestsText = styled.p`
     font-size: 16px;
     text-align: center;
     align-self: center;
+`
+
+const StyledTabs = styled(Tabs)`
+    padding: 0 20px;
+`
+
+const StyledTab = styled(Tab)`
+    padding: 0;
+    font-weight: 400;
 `
 
 export default function ListaConvidados() {
@@ -128,6 +147,8 @@ export default function ListaConvidados() {
     const [paymentType, setPaymentType] = useState('');
     const [rg, setRg] = useState('');
     const [cpf, setCpf] = useState('');
+    const [inviteTabValue, setInviteTabValue] = useState(0);
+    const [qrcode, setQrcode] = useState('');
 
     const tableList = [
         {
@@ -213,6 +234,7 @@ export default function ListaConvidados() {
         setPhone(invite.phone)
         setGroup(invite.group)
         setObservations(invite.observations)
+        generateInviteQrCode(invite.id)
     }
 
     const fillGuestDialogFields = (guest) => {
@@ -322,6 +344,25 @@ export default function ListaConvidados() {
         setInvitationGuestsList([...newinvitationGuestsList])
     }
 
+    function a11yProps(index) {
+        return {
+          id: `simple-tab-${index}`,
+          'aria-controls': `simple-tabpanel-${index}`,
+        };
+    }
+
+    const changeInviteDialogTab = (event, newValue) => {
+        setInviteTabValue(newValue);
+    };
+
+    const generateInviteQrCode = (inviteId) => {
+        QRCode.toDataURL(inviteId, (err, url) => {
+            if(err) return console.error(err)
+            
+            setQrcode(url)
+        })
+    }
+
     return(
         <ThemeProvider theme={theme}>
             <Tipografia variante="h1" componente="h1">Lista de Convidados</Tipografia>
@@ -355,7 +396,7 @@ export default function ListaConvidados() {
             }} sx={{
                 minWidth: '800px',
                 '& .MuiPaper-root': {
-                background: theme.palette.common.white
+                    background: theme.palette.common.white
                 }
             }} fullWidth open={openInvitations} onClose={closeInvitationsPopup} maxWidth="md">
                 <StyledDialogTitle>
@@ -364,44 +405,84 @@ export default function ListaConvidados() {
                         <CloseIcon sx={{ color: `grey[200]`}}/>
                     </IconButton>
                 </StyledDialogTitle>
-                <DialogSectionDivider>Dados do convite</DialogSectionDivider>
-                <StyledDialogContent>
-                    <StyledLabel sx={{padding: '10px'}}>Nome do convite*</StyledLabel>
-                    <StyledTextField value={invitationName} onChange={e => setInvitationName(e.target.value)} id="outlined-basic" fullWidth variant="outlined" placeholder="Ex.: Familia da Julia"></StyledTextField>
-                    <Grid2 container spacing={2}>
-                        <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
-                            <StyledLabel>DDI</StyledLabel>
-                            <ListaSuspensa id={"DDI"} value={ddi} onChange={setDdi} itens={ddiList} isDDISelect={true}/>
-                        </Grid2>
-                        <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
-                            <StyledLabel>Celular com DDD: </StyledLabel>
-                            <StyledTextField value={phone} onChange={e => setPhone(e.target.value)} variant="outlined" placeholder="(00) 999999999"></StyledTextField>
-                        </Grid2>
-                        <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
-                            <StyledLabel>A qual grupo pertence: </StyledLabel>
-                            <ListaSuspensa value={group} onChange={setGroup} id={"grupos"} itens={groupList}/>
-                        </Grid2>
-                    </Grid2>
-                    <StyledLabel>Observações: </StyledLabel>
-                    <StyledTextField value={observations} onChange={e => setObservations(e.target.value)} multiline rows={4} fullWidth></StyledTextField>
-                </StyledDialogContent>
-                <DialogSectionDivider>Convidados</DialogSectionDivider>
-                {invitationGuestsList.length === 0 ?
-                    <StyledNoGuestsText variante="body" componente="body">Nenhum convidado cadastrado. Informe os dados de pelo menos um convidado para este convite. </StyledNoGuestsText> 
-                :
+                {inviteEditMode && <Divider/>}
+                {inviteEditMode && <StyledTabs value={inviteTabValue} onChange={changeInviteDialogTab}>
+                    <StyledTab label="Dados do convite" {...a11yProps(0)} />
+                    <StyledTab style={{margin: '0 10px'}} label="QR Code" {...a11yProps(1)} />
+                </StyledTabs>}
+                <TabPanel value={inviteTabValue} index={0}>
+                    <DialogSectionDivider>Dados do convite</DialogSectionDivider>
                     <StyledDialogContent>
-                        {invitationGuestsList.map(guest => <ItemConvidado
-                            key={guest.id}
-                            convidado={guest}
-                            onClick={(guestId) => openGuestPopup(guestId)}
-                            onDelete={(guestId) => removeGuestFromInvite(guestId)}
-                            onChange={(answer, guestId) => changeGuestAnswer(answer, guestId)}
-                        />)}
+                        <StyledLabel sx={{padding: '10px'}}>Nome do convite*</StyledLabel>
+                        <StyledTextField value={invitationName} onChange={e => setInvitationName(e.target.value)} id="outlined-basic" fullWidth variant="outlined" placeholder="Ex.: Familia da Julia"></StyledTextField>
+                        <Grid2 container spacing={2}>
+                            <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
+                                <StyledLabel>DDI</StyledLabel>
+                                <ListaSuspensa id={"DDI"} value={ddi} onChange={setDdi} itens={ddiList} isDDISelect={true}/>
+                            </Grid2>
+                            <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
+                                <StyledLabel>Celular com DDD: </StyledLabel>
+                                <StyledTextField value={phone} onChange={e => setPhone(e.target.value)} variant="outlined" placeholder="(00) 999999999"></StyledTextField>
+                            </Grid2>
+                            <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
+                                <StyledLabel>A qual grupo pertence: </StyledLabel>
+                                <ListaSuspensa value={group} onChange={setGroup} id={"grupos"} itens={groupList}/>
+                            </Grid2>
+                        </Grid2>
+                        <StyledLabel>Observações: </StyledLabel>
+                        <StyledTextField style={{margin: '0 0 15px 0'}} value={observations} onChange={e => setObservations(e.target.value)} multiline rows={4} fullWidth></StyledTextField>
                     </StyledDialogContent>
-                }
-                <StyledBotao variant={"contained"} onClick={() => openGuestPopup()}>Adicionar convidados</StyledBotao>
+                    <DialogSectionDivider>Convidados</DialogSectionDivider>
+                    {invitationGuestsList.length === 0 ?
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                            }}>
+                            <StyledNoGuestsText variante="body" componente="body">Nenhum convidado cadastrado. Informe os dados de pelo menos um convidado para este convite. </StyledNoGuestsText> 
+                        </div>
+                        :
+                        <StyledDialogContent>
+                            {invitationGuestsList.map(guest => <ItemConvidado
+                                key={guest.id}
+                                convidado={guest}
+                                onClick={(guestId) => openGuestPopup(guestId)}
+                                onDelete={(guestId) => removeGuestFromInvite(guestId)}
+                                onChange={(answer, guestId) => changeGuestAnswer(answer, guestId)}
+                                />)}
+                        </StyledDialogContent>
+                    }
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center'
+                        }}>
+                        <StyledBotao variant={"contained"} onClick={() => openGuestPopup()}>Adicionar convidados</StyledBotao>
+                    </div>
+                </TabPanel>
+                <TabPanel value={inviteTabValue} index={1}>
+                    <StyledDialogContent>
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                            }}>
+                            <StyledLabel variante="body" componente="body">QR Code do convite para apresentar na recepção do evento.</StyledLabel> 
+                        </div>
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                            }}>
+                            <StyledQrCode src={qrcode} />
+                        </div>
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                            }}>
+                            <StyledBotao variant={"outlined"}>Baixar QR Code</StyledBotao>
+                            <StyledBotao variant={"outlined"}>Enviar para WhatsApp</StyledBotao>
+                        </div>
+                    </StyledDialogContent>
+                </TabPanel>
                 <DialogActions color="primary" sx={{padding: 0}}>
-                    <Button type="submit" fullWidth color="primary" variant="contained">Salvar</Button>
+                    <Button type="submit" fullWidth sx={{height: 50}} color="primary" variant="contained">Salvar</Button>
                 </DialogActions>
             </Dialog>
 

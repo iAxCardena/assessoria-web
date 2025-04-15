@@ -16,7 +16,7 @@ export default function ListaSuspensa({label = "", value, onChange, selectId, it
             <Autocomplete
                 id={selectId}
                 sx={{'& input': {
-                    height: '8px',
+                    height: '6px',
                 }}}
                 value={value !== undefined ? ("+"+value) : ""}
                 onChange={(event) => handleSelectedDdiChange(event)}
@@ -55,7 +55,7 @@ export default function ListaSuspensa({label = "", value, onChange, selectId, it
                 <Autocomplete
                     disablePortal
                     sx={{'& input': {
-                        height: '8px',
+                        height: '6px',
                     }}}
                     options={itens}
                     value={value !== undefined ? value : null}

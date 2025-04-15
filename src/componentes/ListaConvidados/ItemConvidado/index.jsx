@@ -9,7 +9,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 
 const CardEstilizado = styled.li`
-    margin: 10px;
+    margin: 10px 0;
     padding: 10px;
     border: 1px solid;
     border-color: ${props => props.bordercolor};
