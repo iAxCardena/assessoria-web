@@ -102,8 +102,8 @@ export default function ListaConvidados() {
             id: uuidv4(),
             name: "Familia do Fulano",
             ddi: "55",
-            phone: "(11) 99999999",
-            group: "Amigos do Noivo",
+            phone: "(11) 999999999",
+            group: "Familia do Noivo",
             observations: "Sei la",
             guests: [
                 {
@@ -120,6 +120,81 @@ export default function ListaConvidados() {
                 {
                     id: uuidv4(),
                     name: "Ciclana",
+                    answer: "confirmed",
+                    table: "Mesa A",
+                    gender: "Feminino",
+                    ageGroup: "Adulto",
+                    pagamento: "Inteira",
+                    rg: "111111111",
+                    cpf: "22222222222"
+                },
+            ]
+        },
+        {
+            id: uuidv4(),
+            name: "Amigos do Fulano",
+            ddi: "55",
+            phone: "(11) 999999998",
+            group: "Amigos do Noivo",
+            observations: "só os parças",
+            guests: [
+                {
+                    id: uuidv4(),
+                    name: "Beltrano",
+                    answer: "confirmed",
+                    table: "Mesa A",
+                    gender: "Masculino",
+                    ageGroup: "Adulto",
+                    pagamento: "Inteira",
+                    rg: "111111111",
+                    cpf: "22222222222"
+                },
+                {
+                    id: uuidv4(),
+                    name: "Fudêncio",
+                    answer: "confirmed",
+                    table: "Mesa A",
+                    gender: "Masculino",
+                    ageGroup: "Adulto",
+                    pagamento: "Inteira",
+                    rg: "111111111",
+                    cpf: "22222222222"
+                },
+            ]
+        },
+        {
+            id: uuidv4(),
+            name: "As Três Espiãs Demais",
+            ddi: "55",
+            phone: "(11) 999999997",
+            group: "Amigos da Noiva",
+            observations: "Sei la",
+            guests: [
+                {
+                    id: uuidv4(),
+                    name: "Sam",
+                    answer: "confirmed",
+                    table: "Mesa A",
+                    gender: "Feminino",
+                    ageGroup: "Adulto",
+                    pagamento: "Inteira",
+                    rg: "111111111",
+                    cpf: "22222222222"
+                },
+                {
+                    id: uuidv4(),
+                    name: "Clover",
+                    answer: "confirmed",
+                    table: "Mesa A",
+                    gender: "Feminino",
+                    ageGroup: "Adulto",
+                    pagamento: "Inteira",
+                    rg: "111111111",
+                    cpf: "22222222222"
+                },
+                {
+                    id: uuidv4(),
+                    name: "Alex",
                     answer: "confirmed",
                     table: "Mesa A",
                     gender: "Feminino",
@@ -351,6 +426,20 @@ export default function ListaConvidados() {
         };
     }
 
+    const handleQRCodeDownload = () => {
+        QRCode.toDataURL(invitationId, (err, url) => {
+            if(err) return console.error(err);
+
+            let qrCodeURL = url.replace("image/png", "image/octet-stream");
+            let element = document.createElement("a");
+            element.href = qrCodeURL;
+            element.download = "QR_CODE.png";
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        });
+    }
+
     const changeInviteDialogTab = (event, newValue) => {
         setInviteTabValue(newValue);
     };
@@ -361,6 +450,17 @@ export default function ListaConvidados() {
             
             setQrcode(url)
         })
+    }
+
+    const deleteInvite = (event, inviteId) => {
+        event.stopPropagation()
+        let newInvitationsList = invitations.filter(invite => invite.id !== inviteId)
+        setInvitations([...newInvitationsList])
+    }
+
+    const directlyAddGuestToInvite = (inviteId) => {
+        console.log(inviteId)
+        openGuestPopup()
     }
 
     return(
@@ -384,6 +484,8 @@ export default function ListaConvidados() {
                     key={convite.id}
                     convite={convite}
                     onClick={(inviteId) => openInvitationsPopup(inviteId)}
+                    onDeleteInvite={(event, inviteId) => deleteInvite(event, inviteId)}
+                    onAddGuest={(inviteId) => directlyAddGuestToInvite(inviteId)}
                 />)}
             </Container>
 
@@ -470,13 +572,13 @@ export default function ListaConvidados() {
                             display: 'flex',
                             justifyContent: 'center'
                             }}>
-                            <StyledQrCode src={qrcode} />
+                            <StyledQrCode id={qrcode} src={qrcode} />
                         </div>
                         <div style={{
                             display: 'flex',
                             justifyContent: 'center'
                             }}>
-                            <StyledBotao variant={"outlined"}>Baixar QR Code</StyledBotao>
+                            <StyledBotao onClick={handleQRCodeDownload} variant={"outlined"}>Baixar QR Code</StyledBotao>
                             <StyledBotao variant={"outlined"}>Enviar para WhatsApp</StyledBotao>
                         </div>
                     </StyledDialogContent>
