@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import ListaConvidados from "./componentes/ListaConvidados";
 import { ThemeProvider } from "@mui/material";
+import {ConvidadoProvider} from "./contexto/ConvidadoContext.jsx";
 import theme from "./theme.ts";
 
 const AppContainer = styled.div`
@@ -15,7 +16,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <AppContainer backgroundcolor={theme.palette.background.paper}>
-        <ListaConvidados/>
+		<ConvidadoProvider>
+			<ListaConvidados/>
+		</ConvidadoProvider>
       </AppContainer>
     </ThemeProvider>
   );
