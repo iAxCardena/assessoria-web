@@ -317,7 +317,7 @@ export default function ListaConvidados() {
         setPhone(invite.phone)
         setGroup(invite.group)
         setObservations(invite.observations)
-        generateInviteQrCode(invite.id)
+        generateInviteQrCode(invite.qrCode)
     }
 
     const fillGuestDialogFields = (guest) => {
@@ -335,8 +335,10 @@ export default function ListaConvidados() {
     const addInvitation = (event) => {
         event.preventDefault();
         
+        var newQrCode = invitationName.toLocaleLowerCase().slice(invitationName.length-4)+phone.slice(phone.length-4)
         if(inviteEditMode) {
-            var inviteToUpdate = invitations.findIndex(invitation => invitation.id === invitationId)
+            var inviteToUpdate = invitations.find(invitation => invitation.id === invitationId)
+            console.log(newQrCode)
             inviteToUpdate = {
                 id: invitationId,
                 name: invitationName,
@@ -344,6 +346,7 @@ export default function ListaConvidados() {
                 phone: phone,
                 group: group,
                 observations: observations,
+                qrCode: newQrCode,
                 guests: invitationGuestsList
             }
             updateInvitation(inviteToUpdate);
@@ -355,6 +358,7 @@ export default function ListaConvidados() {
                 phone: phone,
                 group: group,
                 observations: observations,
+                qrCode: newQrCode,
                 guests: invitationGuestsList
             }
             setInvitations(previousState => [...previousState, newInvitation])
@@ -453,8 +457,8 @@ export default function ListaConvidados() {
         setInviteTabValue(newValue);
     };
 
-    const generateInviteQrCode = (inviteId) => {
-        QRCode.toDataURL(inviteId, (err, url) => {
+    const generateInviteQrCode = (qrCode) => {
+        QRCode.toDataURL(qrCode, (err, url) => {
             if(err) return console.error(err)
             
             setQrcode(url)

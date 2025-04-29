@@ -19,6 +19,7 @@ const initialInvitation = {
     phone: '',
     group: '',
     observations: '',
+    qrCode: '',
     guests: initialGuest
 }
 const startInvitations = [
@@ -29,6 +30,7 @@ const startInvitations = [
         phone: "(11) 999999999",
         group: "Familia do Noivo",
         observations: "Sei la",
+        qrCode: 'lano9999',
         guests: [
             {
                 id: uuidv4(),
@@ -61,6 +63,7 @@ const startInvitations = [
         phone: "(11) 999999998",
         group: "Amigos do Noivo",
         observations: "só os parças",
+        qrCode: 'lano9998',
         guests: [
             {
                 id: uuidv4(),
@@ -93,6 +96,7 @@ const startInvitations = [
         phone: "(11) 999999997",
         group: "Amigos da Noiva",
         observations: "Sei la",
+        qrCode: 'mais9997',
         guests: [
             {
                 id: uuidv4(),
@@ -159,7 +163,7 @@ export const useConvidadoContext = () => {
 
 export const ConvidadoProvider = ({children}) => {
     const [invitations, setInvitations] = useState(startInvitations);
-    const [invitation, setInvitation] = useState(initialInvitation);
+    // const [invitation, setInvitation] = useState(initialInvitation);
     // const [inviteId, setInviteId] = useState('');
     // const [inviteName, setInviteName] = useState('');
     // const [ddi, setDdi] = useState('55');
@@ -204,7 +208,7 @@ export const ConvidadoProvider = ({children}) => {
     }
 
     const context = {
-        invitation,
+        // invitation,
         invitations,
         setInvitations,
         addNewInvitation,
