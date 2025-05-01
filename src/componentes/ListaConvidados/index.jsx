@@ -17,6 +17,7 @@ import ItemConvidado from "./ItemConvidado/index.jsx";
 import TabPanel from "../TabPanel/index.jsx";
 import QRCode from 'qrcode';
 import { useConvidadoContext } from "../../contexto/ConvidadoContext.jsx";
+import CustomAlertDialog from "../CustomAlertDialog/index.jsx";
 
 const Container = styled.ul`
 	background-color: ${props => props.backgroundcolor};
@@ -96,6 +97,7 @@ const StyledTab = styled(Tab)`
 export default function ListaConvidados() {
     const [openInvitations, openInvitationsChange] = useState(false);
     const [openGuest, openGuestChange] = useState(false);
+    const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
     const [inviteEditMode, setInviteEditMode] = useState(false);
     const [guestEditMode, setGuestEditMode] = useState(false);
     // const [invitations, setInvitations] = useState([
@@ -331,39 +333,42 @@ export default function ListaConvidados() {
         setRg(guest.rg)
         setCpf(guest.cpf)
     }
-    
-    const addInvitation = (event) => {
+
+    const addInvitation = (event, isConfirmationDialog) => {
         event.preventDefault();
         
-        var newQrCode = invitationName.toLocaleLowerCase().slice(invitationName.length-4)+phone.slice(phone.length-4)
-        if(inviteEditMode) {
-            var inviteToUpdate = invitations.find(invitation => invitation.id === invitationId)
-            console.log(newQrCode)
-            inviteToUpdate = {
-                id: invitationId,
-                name: invitationName,
-                ddi: ddi,
-                phone: phone,
-                group: group,
-                observations: observations,
-                qrCode: newQrCode,
-                guests: invitationGuestsList
-            }
-            updateInvitation(inviteToUpdate);
+        if(invitationGuestsList.length === 0 && !isConfirmationDialog) {
+            setOpenConfirmationDialog(true)
         } else {
-            var newInvitation = {
-                id: uuidv4(),
-                name: invitationName,
-                ddi: ddi,
-                phone: phone,
-                group: group,
-                observations: observations,
-                qrCode: newQrCode,
-                guests: invitationGuestsList
+            var newQrCode = invitationName.toLocaleLowerCase().slice(invitationName.length-4)+phone.slice(phone.length-4)
+            if(inviteEditMode) {
+                var inviteToUpdate = invitations.find(invitation => invitation.id === invitationId)
+                inviteToUpdate = {
+                    id: invitationId,
+                    name: invitationName,
+                    ddi: ddi,
+                    phone: phone,
+                    group: group,
+                    observations: observations,
+                    qrCode: newQrCode,
+                    guests: invitationGuestsList
+                }
+                updateInvitation(inviteToUpdate);
+            } else {
+                var newInvitation = {
+                    id: uuidv4(),
+                    name: invitationName,
+                    ddi: ddi,
+                    phone: phone,
+                    group: group,
+                    observations: observations,
+                    qrCode: newQrCode,
+                    guests: invitationGuestsList
+                }
+                setInvitations(previousState => [...previousState, newInvitation])
             }
-            setInvitations(previousState => [...previousState, newInvitation])
+            closeInvitationsPopup();
         }
-        closeInvitationsPopup();
     }
 
     const clearDialogFields = () => {
@@ -446,7 +451,7 @@ export default function ListaConvidados() {
             let qrCodeURL = url.replace("image/png", "image/octet-stream");
             let element = document.createElement("a");
             element.href = qrCodeURL;
-            element.download = "QR_CODE.png";
+            element.download = `QR_CODE_${invitationName}.png`;
             document.body.appendChild(element);
             element.click();
             document.body.removeChild(element);
@@ -500,7 +505,7 @@ export default function ListaConvidados() {
             <Dialog slotProps={{
             paper: {
                 component: 'form',
-                onSubmit: (event) => addInvitation(event),
+                onSubmit: (event) => addInvitation(event, false),
             }
             }} sx={{
                 minWidth: '800px',
@@ -594,6 +599,8 @@ export default function ListaConvidados() {
                     <Button type="submit" fullWidth sx={{height: 50}} color="primary" variant="contained">Salvar</Button>
                 </DialogActions>
             </Dialog>
+
+            <CustomAlertDialog open={openConfirmationDialog} addInvitation={(event) => addInvitation(event, true)} openGuestPopup={() => openGuestPopup()} setOpen={(isOpen) => setOpenConfirmationDialog(isOpen)}/>
 
             {/**Dialog do Convidado */}
             <Dialog slotProps={{

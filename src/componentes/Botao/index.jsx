@@ -11,6 +11,7 @@ const CustomButton = styled(ButtonMUI)`
       border-radius: 10px;
     };
     &:hover {
+		color: white;
 		background-color: ${props => props.backgroundcolor.dark}
     }
 `
