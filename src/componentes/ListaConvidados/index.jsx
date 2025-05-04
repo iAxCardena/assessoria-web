@@ -18,6 +18,7 @@ import TabPanel from "../TabPanel/index.jsx";
 import QRCode from 'qrcode';
 import { useConvidadoContext } from "../../contexto/ConvidadoContext.jsx";
 import CustomAlertDialog from "../CustomAlertDialog/index.jsx";
+import SendMessageDialog from "../SendMessageDialog/index.jsx";
 
 const Container = styled.ul`
 	background-color: ${props => props.backgroundcolor};
@@ -225,7 +226,7 @@ export default function ListaConvidados() {
     const [paymentType, setPaymentType] = useState('');
     const [rg, setRg] = useState('');
     const [cpf, setCpf] = useState('');
-
+    const [openMessageDialog, setOpenMessageDialog] = useState(false);
     const [inviteTabValue, setInviteTabValue] = useState(0);
     const [qrcode, setQrcode] = useState('');
     const {
@@ -591,7 +592,7 @@ export default function ListaConvidados() {
                             justifyContent: 'center'
                             }}>
                             <StyledBotao onClick={handleQRCodeDownload} variant={"outlined"}>Baixar QR Code</StyledBotao>
-                            <StyledBotao variant={"outlined"}>Enviar para WhatsApp</StyledBotao>
+                            <StyledBotao variant={"outlined"} onClick={() => setOpenMessageDialog(true)}>Enviar para WhatsApp</StyledBotao>
                         </div>
                     </StyledDialogContent>
                 </TabPanel>
@@ -599,6 +600,8 @@ export default function ListaConvidados() {
                     <Button type="submit" fullWidth sx={{height: 50}} color="primary" variant="contained">Salvar</Button>
                 </DialogActions>
             </Dialog>
+
+            <SendMessageDialog phone={phone} open={openMessageDialog} setOpen={setOpenMessageDialog}/>
 
             <CustomAlertDialog open={openConfirmationDialog} addInvitation={(event) => addInvitation(event, true)} openGuestPopup={() => openGuestPopup()} setOpen={(isOpen) => setOpenConfirmationDialog(isOpen)}/>
 
