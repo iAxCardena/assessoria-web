@@ -1,19 +1,65 @@
-import { Button, Dialog, TextField, ThemeProvider } from '@mui/material';
-import React, { useState } from 'react'
+import { Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Tab, Tabs, TextField, ThemeProvider, Typography } from '@mui/material';
+import { useState } from 'react'
 import theme from '../../theme.ts';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import styled from '@emotion/styled/macro';
+import { Tipografia } from '../Tipografia/index.jsx';
+import { Botao } from '../Botao/index.jsx';
 
-export default function SendMessageDialog({phone, open, setOpen}) {
+const StyledDialogTitle = styled(DialogTitle)`
+    display: flex;
+    padding: 10px 10px 0 10px;
+    align-items: center;
+    justify-content: start;
+    margin-left: 10px;
+`
+const StyledTabs = styled(Tabs)`
+    padding: 0 20px;
+`
+const StyledTab = styled(Tab)`
+	&.Mui-disabled {
+		color: ${props => props.backgroundcolor};
+	}
+    padding: 0;
+	margin: 0;
+    font-weight: 400;
+`
+const StyledDialogContent = styled(DialogContent)`
+    padding: 0 20px;
+`
+const StyledInputContainer = styled.div`
+	display: flex;
+`
+const StyledLabel = styled.div`
+	display: block;
+    margin: 10px 0;
+`
+const StyledTextField = styled(TextField)`
+    display: flex;
+    margin: 10px 0 10px 0;
+    & input {
+        height: 6px;
+    }
+`
+const StyledBotao = styled(Botao)`
+	border-radius: 10px;
+`
+const StyledDialogActions = styled(DialogActions)`
+	padding: 10px 20px 20px 0;
+`
+
+
+export default function SendMessageDialog({inviteName, ddi, phone, open, setOpen}) {
     const CHARACTER_LIMIT = 100;
 
     const [numberEmptyError, setNumberEmptyError] = useState(false);
     const [messageEmptyError, setMessageEmptyError] = useState(false);
-  
+    const formMessage = inviteName+`\n\nSegue o link para visualizar QR Code do evento Casamento de Fulano & Beltrana\n\n Apresente-o na recepção do evento.\n\n<Link do QR Code>`;
     const [formData, setFormData] = useState({
       mobileNumber: phone,
-      message: "",
+      message: formMessage,
     });
-  
+    
     const { mobileNumber, message } = formData;
 
     const handleClose = () => {
@@ -43,19 +89,52 @@ export default function SendMessageDialog({phone, open, setOpen}) {
     };
   
     return (
-      <ThemeProvider theme={theme}>
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            sx={{
-            textAlign: 'center',
-            '& .MuiPaper-root': {
-                background: theme.palette.common.white
-            }
-            }}
-            maxWidth={"sm"}
-        >
-          <div className='title flex_middle'>
+		<ThemeProvider theme={theme}>
+			<Dialog
+				open={open}
+				onClose={handleClose}
+				sx={{
+					minWidth: '600px',
+					padding: '20px',
+					'& .MuiPaper-root': {
+						background: theme.palette.common.white
+					}
+				}}
+				maxWidth={"md"}
+			>
+				<StyledDialogTitle>
+					Enviar via
+					<StyledTabs value={0}>
+						<StyledTab disabled backgroundcolor={theme.palette.primary.main} icon={<WhatsAppIcon />}></StyledTab>
+					</StyledTabs>
+				</StyledDialogTitle>
+				<Divider sx={{margin: '0 20px'}}/>
+				<StyledDialogContent>
+					<Tipografia variante={"h3"} componente={"h1"}>Enviar por WhatsApp</Tipografia>
+					<StyledInputContainer>
+						<StyledLabel style={{width: '20%'}}>
+							DDI
+							<StyledTextField id="outlined-basic" value={"+"+ddi} variant="outlined" placeholder="Ex.: Familia da Julia"></StyledTextField>
+						</StyledLabel>
+						<StyledLabel style={{width: '100%'}}>
+							Celular com DDD
+							<StyledTextField id="outlined-basic" fullWidth variant="outlined" placeholder="Ex.: Familia da Julia"></StyledTextField>
+						</StyledLabel>
+					</StyledInputContainer>
+					<StyledLabel>Mensagem</StyledLabel>
+					<StyledTextField value={formMessage} multiline rows={8} sx={{margin: '100px', width: '500px'}} id="outlined-basic" fullWidth variant="outlined" placeholder="Escreva uma mensagem para enviar para o convidado"></StyledTextField>
+
+				</StyledDialogContent>
+				<StyledDialogActions>
+					<StyledBotao variant={"outlined"} onClick={handleClose}>Cancelar</StyledBotao>
+					<StyledBotao variant={"contained"} autoFocus>Enviar</StyledBotao>
+				</StyledDialogActions>
+			</Dialog>
+		</ThemeProvider>
+    );
+}
+
+{/* <div className='title flex_middle'>
             <div style={{ marginRight: "0.5em" }}>
               <WhatsAppIcon />
             </div>
@@ -127,10 +206,4 @@ export default function SendMessageDialog({phone, open, setOpen}) {
             >
               Send
             </Button>
-          </div>
-        </Dialog>
-      </ThemeProvider>
-    );
-}
-
-// export default SendMessageDialog
+          </div> */}

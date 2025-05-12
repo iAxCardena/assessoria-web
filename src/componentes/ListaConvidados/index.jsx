@@ -502,7 +502,7 @@ export default function ListaConvidados() {
                 />)}
             </Container>
 
-            {/**Dialog do Convite */}
+            {/**********Dialog do Convite **********/}
             <Dialog slotProps={{
             paper: {
                 component: 'form',
@@ -601,11 +601,11 @@ export default function ListaConvidados() {
                 </DialogActions>
             </Dialog>
 
-            <SendMessageDialog phone={phone} open={openMessageDialog} setOpen={setOpenMessageDialog}/>
+            <SendMessageDialog inviteName={invitationName} ddi={ddi} phone={phone} open={openMessageDialog} setOpen={setOpenMessageDialog}/>
 
             <CustomAlertDialog open={openConfirmationDialog} addInvitation={(event) => addInvitation(event, true)} openGuestPopup={() => openGuestPopup()} setOpen={(isOpen) => setOpenConfirmationDialog(isOpen)}/>
 
-            {/**Dialog do Convidado */}
+            {/**********Dialog do Convidado **********/}
             <Dialog slotProps={{
             paper: {
                 component: 'form',

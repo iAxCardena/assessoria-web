@@ -7,19 +7,29 @@ const CustomButton = styled(ButtonMUI)`
   	&.MuiButton-contained {
       display: flex;
       width: -moz-max-content;
-      background-color: ${props => props.backgroundcolor.main};
+      background-color: ${props => props.backgroundcolor.primary.main};
       border-radius: 10px;
+      &:hover {
+        color: white;
+        background-color: ${props => props.backgroundcolor.primary.dark}
+      }
     };
-    &:hover {
-		color: white;
-		background-color: ${props => props.backgroundcolor.dark}
-    }
+    &.MuiButton-outlined {
+      display: flex;
+      width: -moz-max-content;
+      background-color: white;
+      border-radius: 10px;
+      &:hover {
+        background-color: ${props => props.backgroundcolor.grey[200]}
+      }
+    };
+    
 `
 
 export const Botao = ({variant, children, ...props}) => {
     return(
       <ThemeProvider theme={theme}>
-			<CustomButton backgroundcolor={theme.palette.primary} variant={variant} {...props}>{children}</CustomButton>
+			<CustomButton backgroundcolor={theme.palette} variant={variant} {...props}>{children}</CustomButton>
       </ThemeProvider>
     );
 }
