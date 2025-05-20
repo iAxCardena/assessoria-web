@@ -14,6 +14,7 @@ import { createTheme } from "@mui/material";
 #f1f1f1
 #e5e5e5
 #272c33
+#55565a
 */
 
 const theme = createTheme({
@@ -30,6 +31,9 @@ const theme = createTheme({
     background: {
       	default: '#f6ebd9',
 		paper: '#f0eaea'
+    },
+    text: {
+        primary: '#55565a'
     },
     warning: {
       	main: '#fdc862'
