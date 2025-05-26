@@ -101,6 +101,7 @@ export default function ListaConvidados() {
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
     const [inviteEditMode, setInviteEditMode] = useState(false);
     const [guestEditMode, setGuestEditMode] = useState(false);
+    const [isDirectlyAddingGuestToInvite, setIsDirectlyAddingGuestToInvite] = useState(false);
     // const [invitations, setInvitations] = useState([
     //     {
     //         id: uuidv4(),
@@ -383,21 +384,8 @@ export default function ListaConvidados() {
 
     const addGuestToInvite = (event) => {
         event.preventDefault();
-        if(guestEditMode) {
-            let guestToUpdate = invitationGuestsList.findIndex(guest => guest.id === newGuestId)
-            invitationGuestsList[guestToUpdate] = {
-                id: newGuestId,
-                name: newGuestName,
-                answer: rsvp,
-                table: table,
-                gender: gender,
-                ageGroup: ageGroup,
-                pagamento: paymentType,
-                rg: rg,
-                cpf: cpf
-            }
-            setInvitationGuestsList([...invitationGuestsList])
-        } else {
+
+        if(isDirectlyAddingGuestToInvite) {
             let newGuest = {
                 id: uuidv4(),
                 name: newGuestName,
@@ -409,8 +397,53 @@ export default function ListaConvidados() {
                 rg: rg,
                 cpf: cpf
             }
-            setInvitationGuestsList([...invitationGuestsList, newGuest]);
+            var newInvitationGuestsList = [...invitationGuestsList, newGuest];
+            var newQrCode = invitationName.toLocaleLowerCase().slice(invitationName.length-4)+phone.slice(phone.length-4)
+            var inviteToUpdate = invitations.find(invitation => invitation.id === invitationId)
+            inviteToUpdate = {
+                id: invitationId,
+                name: invitationName,
+                ddi: ddi,
+                phone: phone,
+                group: group,
+                observations: observations,
+                qrCode: newQrCode,
+                guests: newInvitationGuestsList
+            }
+            updateInvitation(inviteToUpdate);
+            setIsDirectlyAddingGuestToInvite(false);
+        } else {
+            if(guestEditMode) {
+                let guestToUpdate = invitationGuestsList.findIndex(guest => guest.id === newGuestId)
+                invitationGuestsList[guestToUpdate] = {
+                    id: newGuestId,
+                    name: newGuestName,
+                    answer: rsvp,
+                    table: table,
+                    gender: gender,
+                    ageGroup: ageGroup,
+                    pagamento: paymentType,
+                    rg: rg,
+                    cpf: cpf
+                }
+                setInvitationGuestsList([...invitationGuestsList])
+            } else {
+                console.log('new guest')
+                let newGuest = {
+                    id: uuidv4(),
+                    name: newGuestName,
+                    answer: rsvp,
+                    table: table,
+                    gender: gender,
+                    ageGroup: ageGroup,
+                    pagamento: paymentType,
+                    rg: rg,
+                    cpf: cpf
+                }
+                setInvitationGuestsList([...invitationGuestsList, newGuest]);
+            }
         }
+        
         closeGuestPopup();
     }
 
@@ -472,8 +505,11 @@ export default function ListaConvidados() {
     }
 
     const directlyAddGuestToInvite = (inviteId) => {
-        console.log(inviteId)
-        openGuestPopup()
+        console.log(inviteId);
+        var invite = invitations.find(invitation => invitation.id === inviteId)
+        setIsDirectlyAddingGuestToInvite(true);
+        fillInviteDialogFields(invite);
+        openGuestPopup();
     }
 
     return(

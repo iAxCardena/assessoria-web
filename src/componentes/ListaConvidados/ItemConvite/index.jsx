@@ -99,7 +99,6 @@ export const ItemConvite = ({convite, onClick, onDeleteInvite, onAddGuest}) => {
 		handleClose(event)
 	}
 	const handleDeleteInviteClick = (event) => {
-		console.log('handleDeleteInviteClick')
 		onDeleteInvite(event, convite.id)
 	}
 
