@@ -639,9 +639,21 @@ export default function ListaConvidados() {
             </Dialog>}
 
             {openMessageDialog && 
-            <SendMessageDialog inviteName={invitationName} ddi={ddi} phone={phone} open={openMessageDialog} setOpen={setOpenMessageDialog}/>}
-
-            <CustomAlertDialog open={openConfirmationDialog} addInvitation={(event) => addInvitation(event, true)} openGuestPopup={() => openGuestPopup()} setOpen={(isOpen) => setOpenConfirmationDialog(isOpen)}/>
+                <SendMessageDialog inviteName={invitationName} ddi={ddi} phone={phone} open={openMessageDialog} setOpen={setOpenMessageDialog}/>
+            }
+            {openConfirmationDialog 
+                && <CustomAlertDialog 
+                    open={openConfirmationDialog}
+                    title={"Convite sem convidados"}
+                    message={`Você não adicionou nenhum convidado nesse convite, deseja salvar sem convidados?`}
+                    confirmButtonText={"Salvar sem convidados"}
+                    cancelButtonText={"Adicionar convidados"}
+                    onConfirm={(event) => addInvitation(event, true)} 
+                    onCancel={() => openGuestPopup()} 
+                    setOpen={(isOpen) => setOpenConfirmationDialog(isOpen)}
+                />
+            }
+            
 
             {/**********Dialog do Convidado **********/}
             {openGuest && 

@@ -20,49 +20,66 @@ const StyledDialogActions = styled(DialogActions)`
 	display: flex;
   	justify-content: center;
 `
+const StyledIcon = styled.div`
+	display: flex;
+	width: 100%;
+	justify-content: center;
+	& > * {
+		color: ${props => props.backgroundcolor};
+		width: 150px;
+		height: 150px;
+	}
+`
 
-export default function CustomAlertDialog({open, addInvitation, openGuestPopup, setOpen}) {
+export default function CustomAlertDialog({open, icon, title, message, cancelButtonText, confirmButtonText, onCancel, onConfirm, setOpen}) {
     const handleClose = () => {
       setOpen(false);
     };
 
-	const handleSaveClick = (event) => {
-		addInvitation(event);
+	const handleConfirmClick = (event) => {
+		onConfirm(event);
 		setOpen(false);
 	}
 
-	const handleAddGuestsClick = () => {
+	const handleCancelClick = () => {
 		setOpen(false);
-		openGuestPopup();
+		onCancel();
 	}
   
     return (
       <ThemeProvider theme={theme}>
         <Dialog
+		  fullWidth
           open={open}
           onClose={handleClose}
           sx={{
             textAlign: 'center',
             '& .MuiPaper-root': {
-                background: theme.palette.common.white
+                background: theme.palette.common.white,
+				padding: '10px'
             }
           }}
           maxWidth={"sm"}
         >
-          <StyledDialogTitle id="alert-dialog-title">
-            Convite sem convidados
-          </StyledDialogTitle>
-          <DialogContent>
-            <StyledDialogContentText id="alert-dialog-description">
-              {`Você não adicionou nenhum convidado nesse convite, deseja salvar sem convidados?`}
-            </StyledDialogContentText>
-          </DialogContent>
-          <StyledDialogActions>
-            <StyledBotao variant={"outlined"} onClick={handleAddGuestsClick}>Adicionar convidados</StyledBotao>
-            <StyledBotao variant={"contained"} onClick={(event) => handleSaveClick(event)} autoFocus>
-              Salvar sem convidados
-            </StyledBotao>
-          </StyledDialogActions>
+			{icon!=null && 
+				<StyledIcon backgroundcolor={theme.palette.primary.light}>
+					{icon}
+				</StyledIcon>
+			}
+			<StyledDialogTitle id="alert-dialog-title">
+				{title}
+			</StyledDialogTitle>
+			{message && <DialogContent>
+				<StyledDialogContentText id="alert-dialog-description">
+				{message}
+				</StyledDialogContentText>
+			</DialogContent>}
+			<StyledDialogActions>
+				<StyledBotao variant={"outlined"} onClick={handleCancelClick}>{cancelButtonText}</StyledBotao>
+				<StyledBotao variant={"contained"} onClick={(event) => handleConfirmClick(event)} autoFocus>
+				{confirmButtonText}
+				</StyledBotao>
+			</StyledDialogActions>
         </Dialog>
       </ThemeProvider>
     );

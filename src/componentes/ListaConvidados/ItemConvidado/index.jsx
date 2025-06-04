@@ -1,12 +1,15 @@
 import React from 'react';
+import { useState } from 'react';
 import styled from "@emotion/styled/macro";
 import theme from '../../../theme.ts';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Grid2, IconButton, ThemeProvider, Tooltip } from "@mui/material"
+import { Grid2, IconButton, ThemeProvider, Tooltip } from "@mui/material";
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import CustomAlertDialog from '../../CustomAlertDialog/index.jsx';
 
 const CardEstilizado = styled.li`
     margin: 10px 0;
@@ -74,6 +77,7 @@ const StyledIconButton = styled(IconButton)`
 `
 
 export default function ItemConvidado({convidado, onClick, onDelete, onChange}) {
+    const [openDeleteGuestFromDialog, setOpenDeleteGuestFromDialog] = useState(false);
     const changeGuestAnswer = (event) => {
         event.stopPropagation()
         if(event.target.slot) {
@@ -83,10 +87,6 @@ export default function ItemConvidado({convidado, onClick, onDelete, onChange}) 
 
     const handleEditGuestClick = () => {
         onClick(convidado.id)
-    }
-
-    const handleDeleteGuestClick = () => {
-        onDelete(convidado.id)
     }
 
     return (
@@ -113,13 +113,25 @@ export default function ItemConvidado({convidado, onClick, onDelete, onChange}) 
                             <EditNoteIcon />
                         </Tooltip>
                     </StyledIconButton>
-                    <StyledIconButton onClick={handleDeleteGuestClick} backgroundcolor={theme.palette.grey}>
+                    <StyledIconButton onClick={() => setOpenDeleteGuestFromDialog(true)} backgroundcolor={theme.palette.grey}>
                         <Tooltip title="Excluir convidado">
                             <DeleteIcon />
                         </Tooltip>
                     </StyledIconButton>
                 </Grid2>
             </CardEstilizado>
+            {openDeleteGuestFromDialog 
+                && <CustomAlertDialog 
+                    open={openDeleteGuestFromDialog}
+                    icon={<HelpOutlineIcon/>}
+                    title={"Você tem certeza?"}
+                    confirmButtonText={"Sim, remover agora"}
+                    cancelButtonText={"Cancelar"}
+                    onConfirm={() => onDelete(convidado.id)}
+                    onCancel={() => setOpenDeleteGuestFromDialog(false)}
+                    setOpen={(isOpen) => setOpenDeleteGuestFromDialog(isOpen)}
+                />
+            }
         </ThemeProvider>
     )
 }
