@@ -19,6 +19,7 @@ import QRCode from 'qrcode';
 import { useConvidadoContext } from "../../contexto/ConvidadoContext.jsx";
 import CustomAlertDialog from "../CustomAlertDialog/index.jsx";
 import SendMessageDialog from "../SendMessageDialog/index.jsx";
+import { Controller, useForm } from "react-hook-form";
 
 const Container = styled.ul`
 	background-color: ${props => props.backgroundcolor};
@@ -27,15 +28,12 @@ const Container = styled.ul`
     padding: 30px 20px 20px 20px;
     border-radius: 5px;
 `
-
 const StyledLabel = styled.p`
     margin: 10px 0;
 `
-
 const StyledDialogContent = styled(DialogContent)`
     padding: 0 20px;
 `
-
 const StyledBotao = styled(Botao)`
     text-align: center;
     align-self: center;
@@ -44,14 +42,12 @@ const StyledBotao = styled(Botao)`
         color: white;
     }
 `
-
 const DialogSectionDivider = styled.p`
     background-color: #f0eaea;
     padding: 18px 20px;
     font-weight: 700;
     margin: 0;
 `
-
 const StyledDialogTitle = styled(DialogTitle)`
     display: flex;
     padding: 10px;
@@ -59,7 +55,6 @@ const StyledDialogTitle = styled(DialogTitle)`
     justify-content: space-between;
     margin-left: 10px;
 `
-
 const StyledTextField = styled(TextField)`
     display: flex;
     margin: 0 0 10px 0;
@@ -67,32 +62,30 @@ const StyledTextField = styled(TextField)`
         height: 6px;
     }
 `
-
 const StyledQrCode = styled.img`
     display: flex;
     width: 300px;
 `
-
 const StyledInfoButton = styled(InfoOutlinedIcon)`
     width: 16px;
     height: 16px;
     padding-left: 5px;
 `
-
 const StyledNoGuestsText = styled.p`
     width: 450px;
     font-size: 16px;
     text-align: center;
     align-self: center;
 `
-
 const StyledTabs = styled(Tabs)`
     padding: 0 20px;
 `
-
 const StyledTab = styled(Tab)`
     padding: 0;
     font-weight: 400;
+`
+const StyledErrorMessage = styled(Tipografia)`
+    color: ${props => props.color};
 `
 
 export default function ListaConvidados() {
@@ -230,6 +223,7 @@ export default function ListaConvidados() {
     const [openMessageDialog, setOpenMessageDialog] = useState(false);
     const [inviteTabValue, setInviteTabValue] = useState(0);
     const [qrcode, setQrcode] = useState('');
+    const {register, handleSubmit, control, formState: {errors}} = useForm()
     const {
         invitations,
         setInvitations,
@@ -336,8 +330,8 @@ export default function ListaConvidados() {
         setCpf(guest.cpf)
     }
 
-    const addInvitation = (event, isConfirmationDialog) => {
-        event.preventDefault();
+    const addInvitation = (isConfirmationDialog) => {
+        // event.preventDefault();
         
         if(invitationGuestsList.length === 0 && !isConfirmationDialog) {
             setOpenConfirmationDialog(true)
@@ -512,6 +506,14 @@ export default function ListaConvidados() {
         openGuestPopup();
     }
 
+    const onSubmit = (data) => {
+        addInvitation(data, false);
+    }
+
+    const onError = () => {
+        console.log(errors)
+    }
+
     return(
         <ThemeProvider theme={theme}>
             <Tipografia variante="h1" componente="h1">Lista de Convidados</Tipografia>
@@ -543,7 +545,8 @@ export default function ListaConvidados() {
             <Dialog slotProps={{
             paper: {
                 component: 'form',
-                onSubmit: (event) => addInvitation(event, false),
+                onSubmit: handleSubmit(onSubmit, onError)
+                // onSubmit: (event) => addInvitation(event, false),
             }
             }} sx={{
                 minWidth: '800px',
@@ -566,19 +569,42 @@ export default function ListaConvidados() {
                     <DialogSectionDivider>Dados do convite</DialogSectionDivider>
                     <StyledDialogContent>
                         <StyledLabel sx={{padding: '10px'}}>Nome do convite*</StyledLabel>
-                        <StyledTextField value={invitationName} onChange={e => setInvitationName(e.target.value)} id="outlined-basic" fullWidth variant="outlined" placeholder="Ex.: Familia da Julia"></StyledTextField>
+                        <StyledTextField value={invitationName} {...register("invitationName", {required: true})} onChange={e => setInvitationName(e.target.value)} id="outlined-basic" fullWidth variant="outlined" placeholder="Ex.: Familia da Julia"></StyledTextField>
+                        {errors.invitationName && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>This field is required</StyledErrorMessage>}
                         <Grid2 container spacing={2}>
                             <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
                                 <StyledLabel>DDI</StyledLabel>
-                                <ListaSuspensa id={"DDI"} value={ddi} onChange={setDdi} itens={ddiList} isDDISelect={true}/>
+                                <Controller
+                                    name="ddi"
+                                    control={control}
+                                    defaultValue={ddi}
+                                    rules={{ required: true }}
+                                    render={({field}) => <ListaSuspensa {...field} id={"DDI"} value={ddi} onChange={(value) => {
+                                        field.onChange(value)
+                                        setDdi(value)
+                                    }} itens={ddiList} isDDISelect={true}/>}
+                                />
+                                {/* <ListaSuspensa id={"DDI"} value={ddi} {...register("ddi", {required: true})} onChange={setDdi} itens={ddiList} isDDISelect={true}/> */}
+                                {errors.ddi && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>This field is required</StyledErrorMessage>}
                             </Grid2>
                             <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
                                 <StyledLabel>Celular com DDD: </StyledLabel>
-                                <StyledTextField value={phone} onChange={e => setPhone(e.target.value)} variant="outlined" placeholder="(00) 999999999"></StyledTextField>
+                                <StyledTextField value={phone} inputMode="numeric" {...register("phone", {required: true})} onChange={e => setPhone(e.target.value)} variant="outlined" placeholder="(00) 999999999"></StyledTextField>
+                                {errors.phone && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>This field is required</StyledErrorMessage>}
                             </Grid2>
                             <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
                                 <StyledLabel>A qual grupo pertence: </StyledLabel>
-                                <ListaSuspensa value={group} onChange={setGroup} id={"grupos"} itens={groupList}/>
+                                <Controller
+                                    name="group"
+                                    control={control}
+                                    rules={{ required: true }}
+                                    render={({field}) => <ListaSuspensa {...field} value={group} onChange={(value) => {
+                                        field.onChange(value)
+                                        setGroup(value)
+                                    }} id={"grupos"} itens={groupList}/>}
+                                />
+                                {/* <ListaSuspensa value={group} {...register("group", {required: true})} onChange={setGroup} id={"grupos"} itens={groupList}/> */}
+                                {errors.group && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>This field is required</StyledErrorMessage>}
                             </Grid2>
                         </Grid2>
                         <StyledLabel>Observações: </StyledLabel>
