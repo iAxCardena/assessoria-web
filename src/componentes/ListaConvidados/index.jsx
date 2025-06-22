@@ -84,7 +84,10 @@ const StyledTab = styled(Tab)`
     padding: 0;
     font-weight: 400;
 `
-const StyledErrorMessage = styled(Tipografia)`
+const StyledErrorMessage = styled.span`
+    font-weight: 400;
+    font-size: 12px;
+    position: absolute;
     color: ${props => props.color};
 `
 
@@ -95,115 +98,6 @@ export default function ListaConvidados() {
     const [inviteEditMode, setInviteEditMode] = useState(false);
     const [guestEditMode, setGuestEditMode] = useState(false);
     const [isDirectlyAddingGuestToInvite, setIsDirectlyAddingGuestToInvite] = useState(false);
-    // const [invitations, setInvitations] = useState([
-    //     {
-    //         id: uuidv4(),
-    //         name: "Familia do Fulano",
-    //         ddi: "55",
-    //         phone: "(11) 999999999",
-    //         group: "Familia do Noivo",
-    //         observations: "Sei la",
-    //         guests: [
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Fulano",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Masculino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Ciclana",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Feminino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //         ]
-    //     },
-    //     {
-    //         id: uuidv4(),
-    //         name: "Amigos do Fulano",
-    //         ddi: "55",
-    //         phone: "(11) 999999998",
-    //         group: "Amigos do Noivo",
-    //         observations: "só os parças",
-    //         guests: [
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Beltrano",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Masculino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Fudêncio",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Masculino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //         ]
-    //     },
-    //     {
-    //         id: uuidv4(),
-    //         name: "As Três Espiãs Demais",
-    //         ddi: "55",
-    //         phone: "(11) 999999997",
-    //         group: "Amigos da Noiva",
-    //         observations: "Sei la",
-    //         guests: [
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Sam",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Feminino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Clover",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Feminino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Alex",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Feminino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //         ]
-    //     }
-    // ]);
     const [invitationGuestsList, setInvitationGuestsList] = useState([]);
     const [invitationId, setInvitationId] = useState('');
     const [invitationName, setInvitationName] = useState('');
@@ -506,12 +400,8 @@ export default function ListaConvidados() {
         openGuestPopup();
     }
 
-    const onSubmit = (data) => {
-        addInvitation(data, false);
-    }
-
-    const onError = () => {
-        console.log(errors)
+    const onSubmit = (_) => {
+        addInvitation(false);
     }
 
     return(
@@ -545,7 +435,7 @@ export default function ListaConvidados() {
             <Dialog slotProps={{
             paper: {
                 component: 'form',
-                onSubmit: handleSubmit(onSubmit, onError)
+                onSubmit: handleSubmit(onSubmit)
                 // onSubmit: (event) => addInvitation(event, false),
             }
             }} sx={{
@@ -570,7 +460,7 @@ export default function ListaConvidados() {
                     <StyledDialogContent>
                         <StyledLabel sx={{padding: '10px'}}>Nome do convite*</StyledLabel>
                         <StyledTextField value={invitationName} {...register("invitationName", {required: true})} onChange={e => setInvitationName(e.target.value)} id="outlined-basic" fullWidth variant="outlined" placeholder="Ex.: Familia da Julia"></StyledTextField>
-                        {errors.invitationName && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>This field is required</StyledErrorMessage>}
+                        {errors.invitationName && <StyledErrorMessage style={{translate: '0px -10px'}} color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>Campo obrigatório</StyledErrorMessage>}
                         <Grid2 container spacing={2}>
                             <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
                                 <StyledLabel>DDI</StyledLabel>
@@ -584,13 +474,12 @@ export default function ListaConvidados() {
                                         setDdi(value)
                                     }} itens={ddiList} isDDISelect={true}/>}
                                 />
-                                {/* <ListaSuspensa id={"DDI"} value={ddi} {...register("ddi", {required: true})} onChange={setDdi} itens={ddiList} isDDISelect={true}/> */}
-                                {errors.ddi && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>This field is required</StyledErrorMessage>}
+                                {errors.ddi && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>Campo obrigatório</StyledErrorMessage>}
                             </Grid2>
                             <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
                                 <StyledLabel>Celular com DDD: </StyledLabel>
-                                <StyledTextField value={phone} inputMode="numeric" {...register("phone", {required: true})} onChange={e => setPhone(e.target.value)} variant="outlined" placeholder="(00) 999999999"></StyledTextField>
-                                {errors.phone && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>This field is required</StyledErrorMessage>}
+                                <StyledTextField value={phone} type="tel" inputMode="numeric" {...register("phone", {required: true, pattern:"[0-9]*"})} onChange={e => setPhone(e.target.value)} variant="outlined" placeholder="(00) 999999999"></StyledTextField>
+                                {errors.phone && <StyledErrorMessage style={{translate: '0px -10px'}} color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>Campo obrigatório</StyledErrorMessage>}
                             </Grid2>
                             <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
                                 <StyledLabel>A qual grupo pertence: </StyledLabel>
@@ -603,8 +492,7 @@ export default function ListaConvidados() {
                                         setGroup(value)
                                     }} id={"grupos"} itens={groupList}/>}
                                 />
-                                {/* <ListaSuspensa value={group} {...register("group", {required: true})} onChange={setGroup} id={"grupos"} itens={groupList}/> */}
-                                {errors.group && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>This field is required</StyledErrorMessage>}
+                                {errors.group && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>Campo obrigatório</StyledErrorMessage>}
                             </Grid2>
                         </Grid2>
                         <StyledLabel>Observações: </StyledLabel>
