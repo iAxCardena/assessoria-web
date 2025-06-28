@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import ListaSuspensa from "../ListaSuspensa";
 import ddiList from '../../assets/json/ddi.json';
-import RadioOptions from "../RadioOptions"
+import RadioOptions from "../RadioOptions";
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CheckIcon from '@mui/icons-material/Check';
 import theme from '../../theme.ts';
@@ -98,121 +98,13 @@ const StyledErrorMessage = styled.p`
 `
 
 export default function ListaConvidados() {
+    const {register, handleSubmit, control, setValue, formState: {errors}} = useForm()
     const [openInvitations, openInvitationsChange] = useState(false);
     const [openGuest, openGuestChange] = useState(false);
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
     const [inviteEditMode, setInviteEditMode] = useState(false);
     const [guestEditMode, setGuestEditMode] = useState(false);
     const [isDirectlyAddingGuestToInvite, setIsDirectlyAddingGuestToInvite] = useState(false);
-    // const [invitations, setInvitations] = useState([
-    //     {
-    //         id: uuidv4(),
-    //         name: "Familia do Fulano",
-    //         ddi: "55",
-    //         phone: "(11) 999999999",
-    //         group: "Familia do Noivo",
-    //         observations: "Sei la",
-    //         guests: [
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Fulano",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Masculino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Ciclana",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Feminino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //         ]
-    //     },
-    //     {
-    //         id: uuidv4(),
-    //         name: "Amigos do Fulano",
-    //         ddi: "55",
-    //         phone: "(11) 999999998",
-    //         group: "Amigos do Noivo",
-    //         observations: "só os parças",
-    //         guests: [
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Beltrano",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Masculino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Fudêncio",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Masculino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //         ]
-    //     },
-    //     {
-    //         id: uuidv4(),
-    //         name: "As Três Espiãs Demais",
-    //         ddi: "55",
-    //         phone: "(11) 999999997",
-    //         group: "Amigos da Noiva",
-    //         observations: "Sei la",
-    //         guests: [
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Sam",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Feminino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Clover",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Feminino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //             {
-    //                 id: uuidv4(),
-    //                 name: "Alex",
-    //                 answer: "confirmed",
-    //                 table: "Mesa A",
-    //                 gender: "Feminino",
-    //                 ageGroup: "Adulto",
-    //                 pagamento: "Inteira",
-    //                 rg: "111111111",
-    //                 cpf: "22222222222"
-    //             },
-    //         ]
-    //     }
-    // ]);
     const [invitationGuestsList, setInvitationGuestsList] = useState([]);
     const [invitationId, setInvitationId] = useState('');
     const [invitationName, setInvitationName] = useState('');
@@ -232,7 +124,6 @@ export default function ListaConvidados() {
     const [openMessageDialog, setOpenMessageDialog] = useState(false);
     const [inviteTabValue, setInviteTabValue] = useState(0);
     const [qrcode, setQrcode] = useState('');
-    const {register, handleSubmit, control, formState: {errors}} = useForm()
     const {
         invitations,
         setInvitations,
@@ -319,9 +210,12 @@ export default function ListaConvidados() {
     const fillInviteDialogFields = (invite) => {
         setInvitationId(invite.id)
         setInvitationGuestsList(invite.guests)
+        setValue("invitationName", invite.name)
         setInvitationName(invite.name)
         setDdi(invite.ddi)
+        setValue("phone", invite.phone)
         setPhone(invite.phone)
+        setValue("group", invite.group)
         setGroup(invite.group)
         setObservations(invite.observations)
         generateInviteQrCode(invite.qrCode)
@@ -329,13 +223,16 @@ export default function ListaConvidados() {
 
     const fillGuestDialogFields = (guest) => {
         setNewGuestId(guest.id)
+        setValue("newGuestName", guest.name)
         setNewGuestName(guest.name)
         setRsvp(guest.answer)
         setTable(guest.table)
         setGender(guest.gender)
         setAgeGroup(guest.ageGroup)
         setPaymentType(guest.pagamento)
+        setValue("rg", guest.rg)
         setRg(guest.rg)
+        setValue("cpf", guest.cpf)
         setCpf(guest.cpf)
     }
 
