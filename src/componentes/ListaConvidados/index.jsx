@@ -467,6 +467,7 @@ export default function ListaConvidados() {
             paper: {
                 component: 'form',
                 onSubmit: handleSubmit(onSubmit)
+                // onSubmit: (event) => addInvitation(event, false),
             }
             }} sx={{
                 minWidth: '800px',
