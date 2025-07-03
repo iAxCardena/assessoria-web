@@ -9,7 +9,7 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import CustomAlertDialog from '../../CustomAlertDialog/index.jsx';
+import CustomAlertDialog from '../../../componentes/CustomAlertDialog/index.jsx';
 
 const CardEstilizado = styled.li`
     margin: 10px 0;

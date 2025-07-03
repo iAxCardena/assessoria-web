@@ -3,7 +3,7 @@ import ButtonMUI from "@mui/material/Button";
 import { ThemeProvider } from "@mui/material";
 import theme from '../../theme.ts';
 
-const CustomButton = styled(ButtonMUI)`
+export const CustomButton = styled(ButtonMUI)`
   	&.MuiButton-contained {
       display: flex;
       width: -moz-max-content;

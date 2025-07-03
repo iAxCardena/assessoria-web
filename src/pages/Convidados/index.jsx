@@ -1,25 +1,25 @@
 import styled from "@emotion/styled/macro";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, TextField, Button, Tooltip, ThemeProvider, Divider, Tabs, Tab } from "@mui/material";
-import { Tipografia } from "../Tipografia";
-import { Botao } from "../Botao";
 import { ItemConvite } from "./ItemConvite/index.jsx";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import ListaSuspensa from "../ListaSuspensa";
-import ddiList from '../../assets/json/ddi.json';
-import RadioOptions from "../RadioOptions"
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CheckIcon from '@mui/icons-material/Check';
-import theme from '../../theme.ts';
 import ItemConvidado from "./ItemConvidado/index.jsx";
-import TabPanel from "../TabPanel/index.jsx";
 import QRCode from 'qrcode';
-import { useConvidadoContext } from "../../contexto/ConvidadoContext.jsx";
-import CustomAlertDialog from "../CustomAlertDialog/index.jsx";
-import SendMessageDialog from "../SendMessageDialog/index.jsx";
 import { Controller, useForm } from "react-hook-form";
+import { Botao } from "../../componentes/Botao/index.jsx";
+import { useConvidadoContext } from "../../contexto/ConvidadoContext.jsx";
+import theme from "../../theme.ts";
+import { Tipografia } from "../../componentes/Tipografia/index.jsx";
+import TabPanel from "../../componentes/TabPanel/index.jsx";
+import ddiList from "../../assets/json/ddi.json"
+import ListaSuspensa from "../../componentes/ListaSuspensa/index.jsx";
+import SendMessageDialog from "../../componentes/SendMessageDialog/index.jsx";
+import CustomAlertDialog from "../../componentes/CustomAlertDialog/index.jsx";
+import RadioOptions from "../../componentes/RadioOptions/index.jsx";
 
 const Container = styled.ul`
 	background-color: ${props => props.backgroundcolor};
