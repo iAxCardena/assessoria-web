@@ -20,7 +20,6 @@ root.render(
   <StyledEngineProvider injectFirst>
     {/* <React.StrictMode> */}
       <GlobalStyle/>
-        <Header/>
         <App />
     {/* </React.StrictMode> */}
   </StyledEngineProvider>
