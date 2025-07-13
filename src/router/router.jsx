@@ -1,13 +1,19 @@
 import { createBrowserRouter } from "react-router";
 import ListaConvidados from "../pages/Convidados";
 import ErrorPage from "../pages/ErrorPage";
+import PaginaPadrao from "../pages/PaginaPadrao";
 
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <ListaConvidados/>,
+        element: <PaginaPadrao/>,
         errorElement: <ErrorPage/>,
-        children: []
-    } //TODO criar tela default e readicionar o Header
+        children: [
+            {
+                path:"",
+                element: <ListaConvidados/>
+            }
+        ]
+    }
 ])
