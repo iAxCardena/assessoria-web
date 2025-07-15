@@ -442,8 +442,8 @@ export default function ListaConvidados() {
     return(
         <Container>
             <ThemeProvider theme={theme}>
-                <Tipografia variante="h1" componente="h1">Lista de Convidados</Tipografia>
-                <Botao variant={"contained"} onClick={() => openInvitationsPopup()}>Adicionar convite</Botao>
+                <Tipografia variante="h2" componente="h2">Lista de Convidados</Tipografia>
+                <Botao style={{margin: '10px 0 0 0'}} variant={"contained"} onClick={() => openInvitationsPopup()}>Adicionar convite</Botao>
                 <ListContainer backgroundcolor={theme.palette.grey[50]}>
                     <Grid2 container spacing={0} sx={{marginBottom: 2}}>
                         <Grid2 size={{ xs: 2, sm: 4, md: 4 }} sx={{margin: '0 0 0 10px'}}>

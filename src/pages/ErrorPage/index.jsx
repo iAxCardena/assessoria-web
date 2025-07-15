@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { ThemeProvider } from 'styled-components'
 import theme from '../../theme.ts'
-import { Typography } from '@mui/material'
 import { NavLink } from 'react-router'
 import { Botao } from '../../componentes/Botao/index.jsx'
+import { Tipografia } from '../../componentes/Tipografia/index.jsx'
 
 const Container = styled.div`
     display: flex;
@@ -39,8 +39,8 @@ function ErrorPage() {
         <Container backgroudcolor={theme.palette.primary.main}>
             <Wrapper backgroudcolor={theme.palette.grey[50]}>
                 <TextWrapper>
-                    <Typography
-                        variant='h2'
+                    <Tipografia
+                        variante='h2'
                         sx={{
                             color: theme.palette.primary.main,
                             fontWeight: 400,
@@ -48,13 +48,13 @@ function ErrorPage() {
                         }}
                     >
                         Página não encontrada
-                    </Typography>
-                    <Typography 
-                        variant='body1' 
+                    </Tipografia>
+                    <Tipografia 
+                        variante='h6' 
                         sx={{textAlign: 'center'}}
                     >
                         A página que está procurando não existe ou encontra-se indisponível
-                    </Typography>
+                    </Tipografia>
                 </TextWrapper>
                 <NavLink style={{textDecoration: 'none'}} to={'/'}>
                     <Botao variant={'contained'}>Voltar para a tela inicial</Botao>
