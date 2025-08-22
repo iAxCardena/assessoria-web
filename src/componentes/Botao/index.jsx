@@ -7,6 +7,7 @@ export const CustomButton = styled(ButtonMUI)`
   	&.MuiButton-contained {
       display: flex;
       width: -moz-max-content;
+      height: fit-content;
       background-color: ${props => props.backgroundcolor.primary.main};
       border-radius: 10px;
       &:hover {

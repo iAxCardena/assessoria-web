@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router";
-import ListaConvidados from "../pages/Convidados";
 import ErrorPage from "../pages/ErrorPage";
 import PaginaPadrao from "../pages/PaginaPadrao";
+import Eventos from "../pages/Eventos";
 
 
 export const router = createBrowserRouter([
@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 path:"",
-                element: <ListaConvidados/>
+                element: <Eventos/>
             }
         ]
     }
