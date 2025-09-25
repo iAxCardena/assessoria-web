@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { ThemeProvider } from 'styled-components';
-import theme from '../../theme.ts';
+import { COLOR_GREY, COLOR_PRIMARY } from '../../theme.ts';
 import { Tipografia } from '../../componentes/Tipografia';
 import { Botao } from '../../componentes/Botao';
 import { Box, Tab, Tabs, TextField } from '@mui/material';
@@ -20,10 +19,16 @@ const EventsListContainer = styled(Box)`
   margin: 10px 0;
   overflow: hidden;
   height: auto;
-  background-color: ${props => props.backgroundcolor};
+  background-color: ${COLOR_GREY[50]};
 `
 const StyledTabs = styled(Tabs)`
     padding: 0;
+    & .MuiTabs-indicator {
+      background-color: ${COLOR_PRIMARY['main']};
+    }
+    & .Mui-selected {
+      color: ${COLOR_PRIMARY['main']};
+    }
 `
 const StyledTab = styled(Tab)`
     padding: 0;
@@ -31,6 +36,8 @@ const StyledTab = styled(Tab)`
 `
 const StyledPrintButton = styled(Botao)`
     margin: 10px;
+    border-color: ${COLOR_PRIMARY['main']};
+    color: ${COLOR_PRIMARY['main']};
 `
 
 function Eventos() {
@@ -132,38 +139,36 @@ function Eventos() {
 
   return (
     <Container>
-      <ThemeProvider theme={theme}>
-        <div style={{display: 'flex', justifyContent: 'space-between'}}>
-          <Box>
-            <Tipografia variante="h4" componente="h4">Gestão de Eventos</Tipografia>
-            <Tipografia variante="body1" componente="body1">Gestão de Eventos</Tipografia>
-          </Box>
-          <Botao style={{margin: '10px 0 0 0'}} variant={"contained"} onClick={() => {console.log("first")}}> Adicionar novo evento</Botao>
-        </div>
-        <EventsListContainer backgroundcolor={theme.palette.grey[50]}>
-          <StyledTabs value={tabValue} onChange={(event, value) => setTabValue(value)}>
-            <StyledTab label={`Em Andamento | ${inProgressEvents}`} {...a11yProps(0)} />
-            <StyledTab style={{margin: '0 10px'}} label={`Concluído | ${completedEvents}`} {...a11yProps(1)} />
-            <StyledTab style={{margin: '0 10px'}} label={`Cancelado | ${cancelledEvents}`} {...a11yProps(2)} />
-          </StyledTabs>
-          <Box 
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              margin: '10px 0 0 0'
-            }}
-          >
-            <TextField sx={{flex: 1}} id="standard-basic" label="Buscar evento pelo nome" variant="standard"/>
-            <StyledPrintButton variant={"outlined"}>
-              <PrintOutlinedIcon />
-            </StyledPrintButton>
-            {/* <Botao variant={"contained"}>
-                Mais Filtros
-            </Botao> */}
-          </Box>
-					<EventList eventList={eventList} tabValue={tabValue}/>
-        </EventsListContainer>
-      </ThemeProvider>
+      <div style={{display: 'flex', justifyContent: 'space-between'}}>
+        <Box>
+          <Tipografia variante="h4" color={COLOR_PRIMARY['main']} componente="h4">Gestão de Eventos</Tipografia>
+          <Tipografia variante="body1" componente="body1">Gestão de Eventos</Tipografia>
+        </Box>
+        <Botao style={{margin: '10px 0 0 0'}} variant={"contained"} onClick={() => {console.log("first")}}> Adicionar novo evento</Botao>
+      </div>
+      <EventsListContainer>
+        <StyledTabs value={tabValue} onChange={(event, value) => setTabValue(value)}>
+          <StyledTab label={`Em Andamento | ${inProgressEvents}`} {...a11yProps(0)} />
+          <StyledTab style={{margin: '0 10px'}} label={`Concluído | ${completedEvents}`} {...a11yProps(1)} />
+          <StyledTab style={{margin: '0 10px'}} label={`Cancelado | ${cancelledEvents}`} {...a11yProps(2)} />
+        </StyledTabs>
+        <Box 
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            margin: '10px 0 0 0'
+          }}
+        >
+          <TextField sx={{flex: 1}} id="standard-basic" label="Buscar evento pelo nome" variant="standard"/>
+          <StyledPrintButton variant={"outlined"}>
+            <PrintOutlinedIcon />
+          </StyledPrintButton>
+          {/* <Botao variant={"contained"}>
+              Mais Filtros
+          </Botao> */}
+        </Box>
+        <EventList eventList={eventList} tabValue={tabValue}/>
+      </EventsListContainer>
     </Container>
   )
 }

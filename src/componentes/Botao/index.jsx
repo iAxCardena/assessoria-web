@@ -1,18 +1,17 @@
 import styled from "styled-components";
 import ButtonMUI from "@mui/material/Button";
-import { ThemeProvider } from "@mui/material";
-import theme from '../../theme.ts';
+import { COLOR_GREY, COLOR_PRIMARY } from '../../theme.ts';
 
 export const CustomButton = styled(ButtonMUI)`
   	&.MuiButton-contained {
       display: flex;
       width: -moz-max-content;
       height: fit-content;
-      background-color: ${props => props.backgroundcolor.primary.main};
+      background-color: ${COLOR_PRIMARY['main']};
       border-radius: 10px;
       &:hover {
         color: white;
-        background-color: ${props => props.backgroundcolor.primary.dark}
+        background-color: ${COLOR_PRIMARY['dark']}
       }
     };
     &.MuiButton-outlined {
@@ -21,7 +20,7 @@ export const CustomButton = styled(ButtonMUI)`
       background-color: white;
       border-radius: 10px;
       &:hover {
-        background-color: ${props => props.backgroundcolor.grey[200]}
+        background-color: ${COLOR_GREY[200]}
       }
     };
     
@@ -29,8 +28,6 @@ export const CustomButton = styled(ButtonMUI)`
 
 export const Botao = ({variant, children, ...props}) => {
     return(
-      <ThemeProvider theme={theme}>
-			<CustomButton backgroundcolor={theme.palette} variant={variant} {...props}>{children}</CustomButton>
-      </ThemeProvider>
+			<CustomButton variant={variant} {...props}>{children}</CustomButton>
     );
 }

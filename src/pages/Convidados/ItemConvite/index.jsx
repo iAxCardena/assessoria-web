@@ -1,7 +1,7 @@
 import styled from "@emotion/styled/macro"
-import { Divider, Grid2, IconButton, Menu, MenuItem, ThemeProvider } from "@mui/material"
+import { Divider, Grid2, IconButton, Menu, MenuItem } from "@mui/material"
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import theme from '../../../theme.ts';
+import { COLOR_BLACK, COLOR_ERROR, COLOR_GREY, COLOR_SUCCESS, COLOR_WARNING } from '../../../theme.ts';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
@@ -17,13 +17,13 @@ const CardEstilizado = styled.li`
 `
 const TextoEstilizado = styled.p`
     margin: 0;
-    color: ${(props) => props.color ? props.color : "#000000"};
+    color: ${(props) => props.color ? props.color : COLOR_BLACK};
 `
 const StyledPriorityHighIcon = styled(PriorityHighIcon)`
     width: 15px;
     height: 15px;
     padding: 5px;
-    background-color: ${(props) => props.color ? props.color : "#000000"};
+    background-color: ${(props) => props.color ? props.color : COLOR_BLACK};
     border-radius: 50%;
     margin: 0 4px 0 -25px;
 `
@@ -31,7 +31,7 @@ const StyledCheckIcon = styled(CheckIcon)`
     width: 15px;
     height: 15px;
     padding: 5px;
-    background-color: ${(props) => props.color ? props.color : "#000000"};
+    background-color: ${(props) => props.color ? props.color : COLOR_BLACK};
     border-radius: 50%;
     margin: 0 4px 0 16px;
 `
@@ -39,13 +39,13 @@ const StyledCloseIcon = styled(CloseIcon)`
     width: 15px;
     height: 15px;
     padding: 5px;
-    background-color: ${(props) => props.color ? props.color : "#000000"};
+    background-color: ${(props) => props.color ? props.color : COLOR_BLACK};
     border-radius: 50%;
     margin: 0 4px 0 16px;
 `
 const StyledMenu = styled(Menu)`
 	& .MuiPaper-root {
-		background-color: ${props => props.backgroundcolor[50]};
+		background-color: ${COLOR_GREY[50]};
 	}
 `
 
@@ -103,7 +103,7 @@ export const ItemConvite = ({convite, onClick, onDeleteInvite, onAddGuest}) => {
 	}
 
     return (
-        <ThemeProvider theme={theme}>
+        <>
 			<Divider/>
 			<CardEstilizado onClick={() => handleInvitationClick()}>
 				<Grid2 container spacing={{ xs: 2, md: 3 }}>
@@ -115,18 +115,17 @@ export const ItemConvite = ({convite, onClick, onDeleteInvite, onAddGuest}) => {
 						<TextoEstilizado>{convite.group != null ? convite.group : "-"}</TextoEstilizado>
 					</Grid2>
 					<Grid2 display={"flex"} alignItems={"center"} size={{ xs: 2, sm: 3, md: 3 }}>
-						<StyledPriorityHighIcon color={theme.palette.warning.main}/>
+						<StyledPriorityHighIcon color={COLOR_WARNING}/>
 						{pendingGuests}
-						<StyledCheckIcon color={theme.palette.success.main}/>
+						<StyledCheckIcon color={COLOR_SUCCESS}/>
 						{confirmedGuests}
-						<StyledCloseIcon color={theme.palette.error.main}/>
+						<StyledCloseIcon color={COLOR_ERROR}/>
 						{canceledGuests}
 					</Grid2>
 					<IconButton onClick={handleClick}>
 						<MoreHorizIcon />
 					</IconButton>
 					<StyledMenu
-						backgroundcolor={theme.palette.grey}
 						id="positioned-menu"
 						aria-labelledby="positioned-button"
 						anchorEl={optionsMenuAnchor}
@@ -147,6 +146,6 @@ export const ItemConvite = ({convite, onClick, onDeleteInvite, onAddGuest}) => {
 					</StyledMenu>
 				</Grid2>
 			</CardEstilizado>
-        </ThemeProvider>
+        </>
     )
 }

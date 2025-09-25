@@ -1,6 +1,6 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, Divider, Tab, Tabs, TextField, ThemeProvider } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Divider, Tab, Tabs, TextField } from '@mui/material';
 import { useState } from 'react'
-import theme from '../../theme.ts';
+import { COLOR_ERROR, COLOR_PRIMARY, COLOR_WHITE } from '../../theme.ts';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import styled from '@emotion/styled/macro';
 import { Tipografia } from '../Tipografia/index.jsx';
@@ -18,7 +18,7 @@ const StyledTabs = styled(Tabs)`
 `
 const StyledTab = styled(Tab)`
 	&.Mui-disabled {
-		color: ${props => props.backgroundcolor};
+		color: ${COLOR_PRIMARY['main']};
 	}
     padding: 0;
 	margin: 0;
@@ -49,7 +49,7 @@ const StyledDialogActions = styled(DialogActions)`
 `
 const StyledErrorMessage = styled.div`
     font-size: 0.75em;
-    color: ${props => props.backgroundcolor};
+    color: ${COLOR_ERROR};
     width: 90%;
     padding: 0;
     text-align: center;
@@ -93,59 +93,57 @@ export default function SendMessageDialog({inviteName, ddi, phone, open, setOpen
 	};
   
     return (
-		<ThemeProvider theme={theme}>
-			<Dialog
-				slotProps={{
-					paper: {
-						component: 'form',
-						onSubmit: (event) => onSubmit(event),
-					}
-				}}
-				open={open}
-				onClose={handleClose}
-				sx={{
-					minWidth: '600px',
-					padding: '20px',
-					'& .MuiPaper-root': {
-						background: theme.palette.common.white
-					}
-				}}
-				maxWidth={"md"}
-			>
-				<StyledDialogTitle>
-					Enviar via
-					<StyledTabs value={0}>
-						<StyledTab disabled backgroundcolor={theme.palette.primary.main} icon={<WhatsAppIcon />}></StyledTab>
-					</StyledTabs>
-				</StyledDialogTitle>
-				<Divider sx={{margin: '0 20px'}}/>
-				<StyledDialogContent>
-					<Tipografia variante={"h3"} componente={"h1"}>Enviar por WhatsApp</Tipografia>
-					<StyledInputContainer>
-						<StyledLabel style={{width: '20%'}}>
-							DDI
-							<StyledTextField id="outlined-basic" value={"+"+phoneDdi} onChange={(event) => setPhoneDDI(event.target.value)} variant="outlined" placeholder="Ex.: +55"></StyledTextField>
-						</StyledLabel>
-						<StyledLabel style={{width: '100%'}}>
-							Celular com DDD
-							<StyledTextField id="outlined-basic" value={mobileNumber} onChange={(event) => setMobileNumber(event.target.value)} fullWidth variant="outlined" placeholder="Ex.: 67 9999-9999"></StyledTextField>
-							{/**TODO ajustar as mensagens de erro */}
-							{numberEmptyError && (
-								<StyledErrorMessage backgroundcolor={theme.palette.error.main}>Insira um número para enviar a mensagem</StyledErrorMessage>
-							)}
-						</StyledLabel>
-					</StyledInputContainer>
-					<StyledLabel>Mensagem</StyledLabel>
-					<StyledTextField value={message} onChange={(event) => setMessage(event.target.value)} multiline rows={8} sx={{margin: '100px', width: '500px'}} id="outlined-basic" fullWidth variant="outlined" placeholder="Escreva uma mensagem para enviar para o convidado"></StyledTextField>
-					{messageEmptyError && (
-						<StyledErrorMessage backgroundcolor={theme.palette.error.main}>A mensagem não pode estar vazia</StyledErrorMessage>
-					)}
-				</StyledDialogContent>
-				<StyledDialogActions>
-					<StyledBotao variant={"outlined"} onClick={handleClose}>Cancelar</StyledBotao>
-					<StyledBotao type="submit" variant={"contained"} autoFocus>Enviar</StyledBotao>
-				</StyledDialogActions>
-			</Dialog>
-		</ThemeProvider>
+		<Dialog
+			slotProps={{
+				paper: {
+					component: 'form',
+					onSubmit: (event) => onSubmit(event),
+				}
+			}}
+			open={open}
+			onClose={handleClose}
+			sx={{
+				minWidth: '600px',
+				padding: '20px',
+				'& .MuiPaper-root': {
+					background: COLOR_WHITE
+				}
+			}}
+			maxWidth={"md"}
+		>
+			<StyledDialogTitle>
+				Enviar via
+				<StyledTabs value={0}>
+					<StyledTab disabled icon={<WhatsAppIcon />}></StyledTab>
+				</StyledTabs>
+			</StyledDialogTitle>
+			<Divider sx={{margin: '0 20px'}}/>
+			<StyledDialogContent>
+				<Tipografia variante={"h3"} componente={"h1"}>Enviar por WhatsApp</Tipografia>
+				<StyledInputContainer>
+					<StyledLabel style={{width: '20%'}}>
+						DDI
+						<StyledTextField id="outlined-basic" value={"+"+phoneDdi} onChange={(event) => setPhoneDDI(event.target.value)} variant="outlined" placeholder="Ex.: +55"></StyledTextField>
+					</StyledLabel>
+					<StyledLabel style={{width: '100%'}}>
+						Celular com DDD
+						<StyledTextField id="outlined-basic" value={mobileNumber} onChange={(event) => setMobileNumber(event.target.value)} fullWidth variant="outlined" placeholder="Ex.: 67 9999-9999"></StyledTextField>
+						{/**TODO ajustar as mensagens de erro */}
+						{numberEmptyError && (
+							<StyledErrorMessage>Insira um número para enviar a mensagem</StyledErrorMessage>
+						)}
+					</StyledLabel>
+				</StyledInputContainer>
+				<StyledLabel>Mensagem</StyledLabel>
+				<StyledTextField value={message} onChange={(event) => setMessage(event.target.value)} multiline rows={8} sx={{margin: '100px', width: '500px'}} id="outlined-basic" fullWidth variant="outlined" placeholder="Escreva uma mensagem para enviar para o convidado"></StyledTextField>
+				{messageEmptyError && (
+					<StyledErrorMessage>A mensagem não pode estar vazia</StyledErrorMessage>
+				)}
+			</StyledDialogContent>
+			<StyledDialogActions>
+				<StyledBotao variant={"outlined"} onClick={handleClose}>Cancelar</StyledBotao>
+				<StyledBotao type="submit" variant={"contained"} autoFocus>Enviar</StyledBotao>
+			</StyledDialogActions>
+		</Dialog>
     );
 }

@@ -1,7 +1,6 @@
 import styled from '@emotion/styled/macro';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ThemeProvider } from '@mui/material';
-import React from 'react';
-import theme from '../../theme.ts';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { COLOR_PRIMARY, COLOR_WHITE } from '../../theme.ts';
 import { Botao } from "../Botao";
 
 const StyledDialogTitle = styled(DialogTitle)`
@@ -25,7 +24,7 @@ const StyledIcon = styled.div`
 	width: 100%;
 	justify-content: center;
 	& > * {
-		color: ${props => props.backgroundcolor};
+		color: ${COLOR_PRIMARY['light']};
 		width: 150px;
 		height: 150px;
 	}
@@ -47,7 +46,6 @@ export default function CustomAlertDialog({open, icon, title, message, cancelBut
 	}
   
     return (
-      <ThemeProvider theme={theme}>
         <Dialog
 		  fullWidth
           open={open}
@@ -55,14 +53,14 @@ export default function CustomAlertDialog({open, icon, title, message, cancelBut
           sx={{
             textAlign: 'center',
             '& .MuiPaper-root': {
-                background: theme.palette.common.white,
+                background: COLOR_WHITE,
 				padding: '10px'
             }
           }}
           maxWidth={"sm"}
         >
 			{icon!=null && 
-				<StyledIcon backgroundcolor={theme.palette.primary.light}>
+				<StyledIcon>
 					{icon}
 				</StyledIcon>
 			}
@@ -81,6 +79,5 @@ export default function CustomAlertDialog({open, icon, title, message, cancelBut
 				</StyledBotao>
 			</StyledDialogActions>
         </Dialog>
-      </ThemeProvider>
     );
 }

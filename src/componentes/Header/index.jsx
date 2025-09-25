@@ -1,9 +1,9 @@
-import styled, { ThemeProvider } from "styled-components";
-import theme from '../../theme.ts';
+import styled from "styled-components";
+import { COLOR_BACKGROUND } from '../../theme.ts';
 import logo from '../../assets/logo.png';
 
 const HeaderEstilizado = styled.header`
-	background-color: ${props => props.backgroundcolor};
+	background-color: ${COLOR_BACKGROUND};
 	display: flex;
 	justify-content: start;
 	padding-left: 20px;
@@ -22,10 +22,8 @@ const LogoEstilizado = styled.img`
 
 export default function Header() {
     return(
-      <ThemeProvider theme={theme}>
-        <HeaderEstilizado backgroundcolor={theme.palette.background.default}>
+		<HeaderEstilizado>
 			<LogoEstilizado src={logo} alt="Logo"></LogoEstilizado>
-        </HeaderEstilizado>
-      </ThemeProvider>
+		</HeaderEstilizado>
     );
 }

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled/macro";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, TextField, Button, Tooltip, ThemeProvider, Divider, Tabs, Tab } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, TextField, Button, Tooltip, Divider, Tabs, Tab } from "@mui/material";
 import { ItemConvite } from "./ItemConvite/index.jsx";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
@@ -12,7 +12,7 @@ import QRCode from 'qrcode';
 import { Controller, useForm } from "react-hook-form";
 import { Botao } from "../../componentes/Botao/index.jsx";
 import { useConvidadoContext } from "../../contexto/ConvidadoContext.jsx";
-import theme from "../../theme.ts";
+import { COLOR_ERROR, COLOR_SECONDARY, COLOR_SUCCESS, COLOR_WARNING, COLOR_WHITE } from "../../theme.ts";
 import { Tipografia } from "../../componentes/Tipografia/index.jsx";
 import TabPanel from "../../componentes/TabPanel/index.jsx";
 import ddiList from "../../assets/json/ddi.json"
@@ -67,7 +67,7 @@ const StyledTextField = styled(TextField)`
         height: 6px;
     }
     & .MuiFormHelperText-root {
-        color: ${props => props.helperTextColor ? props.helperTextColor : '#000000'};
+        color: ${COLOR_ERROR}
     }
     
 `
@@ -98,7 +98,7 @@ const StyledErrorMessage = styled.p`
     font-size: 12px;
     margin: 2px 0 0 16px;
     line-height: 17px;
-    color: ${props => props.color};
+    color: ${COLOR_ERROR};
 `
 
 export default function ListaConvidados() {
@@ -441,341 +441,334 @@ export default function ListaConvidados() {
 
     return(
         <Container>
-            <ThemeProvider theme={theme}>
-                <Tipografia variante="h4" componente="h4">Lista de Convidados</Tipografia>
-                <Botao style={{margin: '10px 0 0 0'}} variant={"contained"} onClick={() => openInvitationsPopup()}>Adicionar convite</Botao>
-                <ListContainer backgroundcolor={theme.palette.grey[50]}>
-                    <Grid2 container spacing={0} sx={{marginBottom: 2}}>
-                        <Grid2 size={{ xs: 2, sm: 4, md: 4 }} sx={{margin: '0 0 0 10px'}}>
-                            <Tipografia variante="body" componente="bodyBold">Convite</Tipografia>
-                        </Grid2>
-                        <Grid2 size={{ xs: 2, sm: 4, md: 4 }}>
-                            <Tipografia variante="body" componente="bodyBold">Grupo</Tipografia>
-                        </Grid2>
-                        <Grid2 size={{ xs: 2, sm: 3, md: 3 }}>
-                            <Tipografia variante="body" componente="bodyBold">Respostas</Tipografia>
-                        </Grid2>
+            <Tipografia variante="h4" componente="h4">Lista de Convidados</Tipografia>
+            <Botao style={{margin: '10px 0 0 0'}} variant={"contained"} onClick={() => openInvitationsPopup()}>Adicionar convite</Botao>
+            <ListContainer backgroundcolor={COLOR_GREY[50]}>
+                <Grid2 container spacing={0} sx={{marginBottom: 2}}>
+                    <Grid2 size={{ xs: 2, sm: 4, md: 4 }} sx={{margin: '0 0 0 10px'}}>
+                        <Tipografia variante="body" componente="bodyBold">Convite</Tipografia>
                     </Grid2>
-                    <Divider />
-                    {invitations.map(convite => <ItemConvite
-                        key={convite.id}
-                        convite={convite}
-                        onClick={(inviteId) => openInvitationsPopup(inviteId)}
-                        onDeleteInvite={(event, inviteId) => removeInvitation(event, inviteId)}
-                        onAddGuest={(inviteId) => directlyAddGuestToInvite(inviteId)}
-                    />)}
-                </ListContainer>
+                    <Grid2 size={{ xs: 2, sm: 4, md: 4 }}>
+                        <Tipografia variante="body" componente="bodyBold">Grupo</Tipografia>
+                    </Grid2>
+                    <Grid2 size={{ xs: 2, sm: 3, md: 3 }}>
+                        <Tipografia variante="body" componente="bodyBold">Respostas</Tipografia>
+                    </Grid2>
+                </Grid2>
+                <Divider />
+                {invitations.map(convite => <ItemConvite
+                    key={convite.id}
+                    convite={convite}
+                    onClick={(inviteId) => openInvitationsPopup(inviteId)}
+                    onDeleteInvite={(event, inviteId) => removeInvitation(event, inviteId)}
+                    onAddGuest={(inviteId) => directlyAddGuestToInvite(inviteId)}
+                />)}
+            </ListContainer>
 
-                {/**********Dialog do Convite **********/}
-                {openInvitations && 
-                <Dialog slotProps={{
-                paper: {
-                    component: 'form',
-                    onSubmit: handleSubmit(onSubmit)
-                    // onSubmit: (event) => addInvitation(event, false),
+            {/**********Dialog do Convite **********/}
+            {openInvitations && 
+            <Dialog slotProps={{
+            paper: {
+                component: 'form',
+                onSubmit: handleSubmit(onSubmit)
+                // onSubmit: (event) => addInvitation(event, false),
+            }
+            }} sx={{
+                minWidth: '800px',
+                '& .MuiPaper-root': {
+                    background: COLOR_WHITE
                 }
-                }} sx={{
-                    minWidth: '800px',
-                    '& .MuiPaper-root': {
-                        background: theme.palette.common.white
-                    }
-                }} fullWidth open={openInvitations} onClose={closeInvitationsPopup} maxWidth="md">
-                    <StyledDialogTitle>
-                        Adicionar convite
-                        <IconButton style={{float:'right'}} onClick={closeInvitationsPopup}>
-                            <CloseIcon sx={{ color: `grey[200]`}}/>
-                        </IconButton>
-                    </StyledDialogTitle>
-                    {inviteEditMode && <Divider/>}
-                    {inviteEditMode && <StyledTabs value={inviteTabValue} onChange={changeInviteDialogTab}>
-                        <StyledTab label="Dados do convite" {...a11yProps(0)} />
-                        <StyledTab style={{margin: '0 10px'}} label="QR Code" {...a11yProps(1)} />
-                    </StyledTabs>}
-                    <TabPanel value={inviteTabValue} index={0}>
-                        <DialogSectionDivider>Dados do convite</DialogSectionDivider>
-                        <StyledDialogContent>
-                            <StyledLabel sx={{padding: '10px'}}>Nome do convite*</StyledLabel>
-                            <StyledTextField 
-                                value={invitationName} 
-                                {...register("invitationName", {required: true})} 
-                                helperTextColor={theme.palette.error.main}
-                                error={errors.invitationName}
-                                helperText={errors.invitationName && "Campo obrigatório"}
-                                onChange={e => setInvitationName(e.target.value)} 
-                                id="outlined-basic" 
-                                fullWidth 
-                                variant="outlined" 
-                                placeholder="Ex.: Familia da Julia"
-                            />
-                            <Grid2 container spacing={2}>
-                                <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
-                                    <StyledLabel>DDI</StyledLabel>
-                                    <Controller
-                                        name="ddi"
-                                        control={control}
-                                        defaultValue={ddi}
-                                        rules={{ required: true }}
-                                        render={({field}) => <ListaSuspensa {...field} id={"DDI"} value={ddi} onChange={(value) => {
-                                            field.onChange(value)
-                                            setDdi(value)
-                                        }} itens={ddiList} isDDISelect={true}/>}
-                                    />
-                                    {errors.ddi && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>Campo obrigatório</StyledErrorMessage>}
-                                </Grid2>
-                                <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
-                                    <StyledLabel>Celular com DDD: </StyledLabel>
-                                    <StyledTextField 
-                                        helperTextColor={theme.palette.error.main} 
-                                        value={phone}
-                                        error={errors.phone}
-                                        helperText={errors.phone && "Campo obrigatório"}
-                                        {...register("phone", {required: true})} 
-                                        onChange={e => handlePhoneChange(e.target.value)} 
-                                        variant="outlined" 
-                                        placeholder="(00) 999999999"
-                                    />
-                                </Grid2>
-                                <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
-                                    <StyledLabel>A qual grupo pertence: </StyledLabel>
-                                    <Controller
-                                        name="group"
-                                        control={control}
-                                        rules={{ required: true }}
-                                        render={({field}) => <ListaSuspensa {...field} value={group} onChange={(value) => {
-                                            field.onChange(value)
-                                            setGroup(value)
-                                        }} id={"grupos"} itens={groupList}/>}
-                                    />
-                                    {errors.group && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>Campo obrigatório</StyledErrorMessage>}
-                                </Grid2>
+            }} fullWidth open={openInvitations} onClose={closeInvitationsPopup} maxWidth="md">
+                <StyledDialogTitle>
+                    Adicionar convite
+                    <IconButton style={{float:'right'}} onClick={closeInvitationsPopup}>
+                        <CloseIcon sx={{ color: `grey[200]`}}/>
+                    </IconButton>
+                </StyledDialogTitle>
+                {inviteEditMode && <Divider/>}
+                {inviteEditMode && <StyledTabs value={inviteTabValue} onChange={changeInviteDialogTab}>
+                    <StyledTab label="Dados do convite" {...a11yProps(0)} />
+                    <StyledTab style={{margin: '0 10px'}} label="QR Code" {...a11yProps(1)} />
+                </StyledTabs>}
+                <TabPanel value={inviteTabValue} index={0}>
+                    <DialogSectionDivider>Dados do convite</DialogSectionDivider>
+                    <StyledDialogContent>
+                        <StyledLabel sx={{padding: '10px'}}>Nome do convite*</StyledLabel>
+                        <StyledTextField 
+                            value={invitationName} 
+                            {...register("invitationName", {required: true})} 
+                            error={errors.invitationName}
+                            helperText={errors.invitationName && "Campo obrigatório"}
+                            onChange={e => setInvitationName(e.target.value)} 
+                            id="outlined-basic" 
+                            fullWidth 
+                            variant="outlined" 
+                            placeholder="Ex.: Familia da Julia"
+                        />
+                        <Grid2 container spacing={2}>
+                            <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
+                                <StyledLabel>DDI</StyledLabel>
+                                <Controller
+                                    name="ddi"
+                                    control={control}
+                                    defaultValue={ddi}
+                                    rules={{ required: true }}
+                                    render={({field}) => <ListaSuspensa {...field} id={"DDI"} value={ddi} onChange={(value) => {
+                                        field.onChange(value)
+                                        setDdi(value)
+                                    }} itens={ddiList} isDDISelect={true}/>}
+                                />
+                                {errors.ddi && <StyledErrorMessage variante={"legenda"} componente={"legenda"}>Campo obrigatório</StyledErrorMessage>}
                             </Grid2>
-                            <StyledLabel>Observações: </StyledLabel>
-                            <StyledTextField helperTextColor={theme.palette.error.main} style={{margin: '0 0 15px 0'}} value={observations} onChange={e => setObservations(e.target.value)} multiline rows={4} fullWidth></StyledTextField>
-                        </StyledDialogContent>
-                        <DialogSectionDivider>Convidados</DialogSectionDivider>
-                        {invitationGuestsList.length === 0 ?
-                            <div style={{
-                                display: 'flex',
-                                justifyContent: 'center'
-                                }}>
-                                <StyledNoGuestsText variante="body" componente="body">Nenhum convidado cadastrado. Informe os dados de pelo menos um convidado para este convite. </StyledNoGuestsText> 
-                            </div>
-                            :
-                            <StyledDialogContent>
-                                {invitationGuestsList.map(guest => <ItemConvidado
-                                    key={guest.id}
-                                    convidado={guest}
-                                    onClick={(guestId) => openGuestPopup(guestId)}
-                                    onDelete={(guestId) => removeGuestFromInvite(guestId)}
-                                    onChange={(answer, guestId) => changeGuestAnswer(answer, guestId)}
-                                    />)}
-                            </StyledDialogContent>
-                        }
+                            <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
+                                <StyledLabel>Celular com DDD: </StyledLabel>
+                                <StyledTextField 
+                                    value={phone}
+                                    error={errors.phone}
+                                    helperText={errors.phone && "Campo obrigatório"}
+                                    {...register("phone", {required: true})} 
+                                    onChange={e => handlePhoneChange(e.target.value)} 
+                                    variant="outlined" 
+                                    placeholder="(00) 999999999"
+                                />
+                            </Grid2>
+                            <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
+                                <StyledLabel>A qual grupo pertence: </StyledLabel>
+                                <Controller
+                                    name="group"
+                                    control={control}
+                                    rules={{ required: true }}
+                                    render={({field}) => <ListaSuspensa {...field} value={group} onChange={(value) => {
+                                        field.onChange(value)
+                                        setGroup(value)
+                                    }} id={"grupos"} itens={groupList}/>}
+                                />
+                                {errors.group && <StyledErrorMessage variante={"legenda"} componente={"legenda"}>Campo obrigatório</StyledErrorMessage>}
+                            </Grid2>
+                        </Grid2>
+                        <StyledLabel>Observações: </StyledLabel>
+                        <StyledTextField style={{margin: '0 0 15px 0'}} value={observations} onChange={e => setObservations(e.target.value)} multiline rows={4} fullWidth></StyledTextField>
+                    </StyledDialogContent>
+                    <DialogSectionDivider>Convidados</DialogSectionDivider>
+                    {invitationGuestsList.length === 0 ?
                         <div style={{
                             display: 'flex',
                             justifyContent: 'center'
                             }}>
-                            <StyledBotao variant={"contained"} onClick={() => openGuestPopup()}>Adicionar convidados</StyledBotao>
+                            <StyledNoGuestsText variante="body" componente="body">Nenhum convidado cadastrado. Informe os dados de pelo menos um convidado para este convite. </StyledNoGuestsText> 
                         </div>
-                    </TabPanel>
-                    <TabPanel value={inviteTabValue} index={1}>
+                        :
                         <StyledDialogContent>
-                            <div style={{
-                                display: 'flex',
-                                justifyContent: 'center'
-                                }}>
-                                <StyledLabel variante="body" componente="body">QR Code do convite para apresentar na recepção do evento.</StyledLabel> 
-                            </div>
-                            <div style={{
-                                display: 'flex',
-                                justifyContent: 'center'
-                                }}>
-                                <StyledQrCode id={qrcode} src={qrcode} />
-                            </div>
-                            <div style={{
-                                display: 'flex',
-                                justifyContent: 'center'
-                                }}>
-                                <StyledBotao onClick={handleQRCodeDownload} variant={"outlined"}>Baixar QR Code</StyledBotao>
-                                <StyledBotao variant={"outlined"} onClick={() => setOpenMessageDialog(true)}>Enviar para WhatsApp</StyledBotao>
-                            </div>
+                            {invitationGuestsList.map(guest => <ItemConvidado
+                                key={guest.id}
+                                convidado={guest}
+                                onClick={(guestId) => openGuestPopup(guestId)}
+                                onDelete={(guestId) => removeGuestFromInvite(guestId)}
+                                onChange={(answer, guestId) => changeGuestAnswer(answer, guestId)}
+                                />)}
                         </StyledDialogContent>
-                    </TabPanel>
-                    <DialogActions color="primary" sx={{padding: 0}}>
-                        <Button type="submit" fullWidth sx={{height: 50}} color="primary" variant="contained">Salvar</Button>
-                    </DialogActions>
-                </Dialog>}
-
-                {openMessageDialog && 
-                    <SendMessageDialog inviteName={invitationName} ddi={ddi} phone={phone} open={openMessageDialog} setOpen={setOpenMessageDialog}/>
-                }
-                {openConfirmationDialog 
-                    && <CustomAlertDialog 
-                        open={openConfirmationDialog}
-                        title={"Convite sem convidados"}
-                        message={`Você não adicionou nenhum convidado nesse convite, deseja salvar sem convidados?`}
-                        confirmButtonText={"Salvar sem convidados"}
-                        cancelButtonText={"Adicionar convidados"}
-                        onConfirm={(event) => addInvitation(event, true)} 
-                        onCancel={() => openGuestPopup()} 
-                        setOpen={(isOpen) => setOpenConfirmationDialog(isOpen)}
-                    />
-                }
-                
-
-                {/**********Dialog do Convidado **********/}
-                {openGuest && 
-                <Dialog slotProps={{
-                paper: {
-                    component: 'form',
-                    onSubmit: handleSubmit(onGuestSubmit, onGuestError)
-                }
-                }} sx={{
-                    minWidth: '800px',
-                    '& .MuiPaper-root': {
-                    background: theme.palette.common.white
                     }
-                }} fullWidth open={openGuest} onClose={closeGuestPopup} maxWidth="md">
-                    <StyledDialogTitle justifyContent={'center'}>
-                        Adicionar convidado
-                        <IconButton style={{float:'right'}} onClick={closeGuestPopup}>
-                            <CloseIcon sx={{ color: `grey[200]`}}/>
-                        </IconButton>
-                    </StyledDialogTitle>
-                    <Divider/>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center'
+                        }}>
+                        <StyledBotao variant={"contained"} onClick={() => openGuestPopup()}>Adicionar convidados</StyledBotao>
+                    </div>
+                </TabPanel>
+                <TabPanel value={inviteTabValue} index={1}>
                     <StyledDialogContent>
-                        <Grid2 container spacing={2}>
-                            <Grid2 size={{ xs: 9, sm: 9, md: 9 }}>
-                                <StyledLabel>Nome do convidado*</StyledLabel>
-                                <StyledTextField 
-                                    {...register("newGuestName", {required: true})} 
-                                    helperTextColor={theme.palette.error.main}
-                                    error={errors.newGuestName}
-                                    helperText={errors.newGuestName && "Campo obrigatório"}
-                                    value={newGuestName} 
-                                    onChange={e => setNewGuestName(e.target.value)} 
-                                    id="outlined-basic" fullWidth variant="outlined" 
-                                    placeholder="Ex.: Julia"
-                                />
-                            </Grid2>
-                            <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
-                                <StyledLabel style={{display: 'flex', alignItems: 'center'}}>
-                                    RSVP
-                                    <Tooltip title={"Status de Confirmação de presença"}>
-                                        <StyledInfoButton color="primary"/>
-                                    </Tooltip>
-                                </StyledLabel>
-                                <RadioOptions value={rsvp}
-                                    onClick={setRsvp}
-                                    options={[
-                                        {id: 1, value: "pending", label: <PriorityHighIcon/>, hint:'Pendente', color: theme.palette.warning.main},
-                                        {id: 2, value: "confirmed", label: <CheckIcon/>, hint:'Confirmado', color: theme.palette.success.main},
-                                        {id: 3, value: "canceled", label: <CloseIcon/>, hint:'Cancelado', color: theme.palette.error.main}
-                                    ]}
-                                />
-                            </Grid2>
-                        </Grid2>
-                        <Grid2 container spacing={2}>
-                            <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
-                                <StyledLabel>Mesa: </StyledLabel>
-                                <Controller
-                                    name="table"
-                                    control={control}
-                                    defaultValue={table}
-                                    rules={{ required: true }}
-                                    render={({field}) =>
-                                        <ListaSuspensa 
-                                            {...field} 
-                                            value={table} 
-                                            onChange={(value) => {
-                                                field.onChange(value)
-                                                setTable(value)
-                                            }} 
-                                            label="Digite ou selecione a mesa" 
-                                            itens={tableList}
-                                        />
-                                    }
-                                />
-                                {errors.table && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>Campo obrigatório</StyledErrorMessage>}
-                            </Grid2>
-                            <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
-                                <StyledLabel>Gênero:</StyledLabel>
-                                <RadioOptions value={gender} 
-                                    onClick={setGender} 
-                                    options={[
-                                        {id: 1, value: 'Masculino', label: 'Masculino'},
-                                        {id: 2, value: 'Feminino', label: 'Feminino'},
-                                        {id: 3, value: 'Não binário', label: 'Não binário'}
-                                    ]}
-                                />
-                            </Grid2>
-                        </Grid2>
-                        <Grid2 container spacing={2}>
-                            <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
-                                <StyledLabel>Faixa etária: </StyledLabel>
-                                <Controller
-                                    name="ageGroup"
-                                    control={control}
-                                    defaultValue={ageGroup}
-                                    rules={{ required: true }}
-                                    render={({field}) =>
-                                        <ListaSuspensa 
-                                            {...field} 
-                                            value={ageGroup} 
-                                            onChange={(value) => {
-                                                field.onChange(value)
-                                                setAgeGroup(value)
-                                            }} 
-                                            itens={ageGroupList}
-                                        />
-                                    }
-                                />
-                                {errors.ageGroup && <StyledErrorMessage color={theme.palette.error.main} variante={"legenda"} componente={"legenda"}>Campo obrigatório</StyledErrorMessage>}
-                            </Grid2>
-                            <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
-                                <StyledLabel>Pagamento/custo por convidado:</StyledLabel>
-                                <RadioOptions value={paymentType} 
-                                    onClick={setPaymentType} 
-                                    options={[
-                                        {id: 1, value: 'Inteira', label: 'Inteira'},
-                                        {id: 2, value: 'Meia', label: 'Meia'},
-                                        {id: 3, value: 'Gratuita', label: 'Gratuita'}
-                                    ]}
-                                />
-                            </Grid2>
-                        </Grid2>
-                        <Grid2 container spacing={2}>
-                            <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
-                                <StyledLabel>RG: </StyledLabel>
-                                <StyledTextField 
-                                    {...register("rg", {required: true})} 
-                                    helperTextColor={theme.palette.error.main}
-                                    error={errors.rg}
-                                    helperText={errors.rg && "Campo obrigatório"} 
-                                    value={rg}
-                                    onChange={e => handleRGChange(e.target.value)}
-                                    variant="outlined" label=""
-                                />
-                            </Grid2>
-                            <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
-                                <StyledLabel>CPF: </StyledLabel>
-                                <StyledTextField 
-                                    {...register("cpf", {required: true})} 
-                                    helperTextColor={theme.palette.error.main}
-                                    error={errors.cpf}
-                                    helperText={errors.cpf && "Campo obrigatório"}
-                                    value={cpf} 
-                                    onChange={e => handleCPFChange(e.target.value)} 
-                                    variant="outlined" label=""
-                                />
-                            </Grid2>
-                        </Grid2>
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                            }}>
+                            <StyledLabel variante="body" componente="body">QR Code do convite para apresentar na recepção do evento.</StyledLabel> 
+                        </div>
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                            }}>
+                            <StyledQrCode id={qrcode} src={qrcode} />
+                        </div>
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                            }}>
+                            <StyledBotao onClick={handleQRCodeDownload} variant={"outlined"}>Baixar QR Code</StyledBotao>
+                            <StyledBotao variant={"outlined"} onClick={() => setOpenMessageDialog(true)}>Enviar para WhatsApp</StyledBotao>
+                        </div>
                     </StyledDialogContent>
-                    <DialogActions sx={{padding: 0}}>
-                        <Button fullWidth type="submit" color="primary" variant="contained">Salvar</Button>
-                    </DialogActions>
-                </Dialog>}
-            </ThemeProvider>
+                </TabPanel>
+                <DialogActions color="primary" sx={{padding: 0}}>
+                    <Button type="submit" fullWidth sx={{height: 50}} color="primary" variant="contained">Salvar</Button>
+                </DialogActions>
+            </Dialog>}
+
+            {openMessageDialog && 
+                <SendMessageDialog inviteName={invitationName} ddi={ddi} phone={phone} open={openMessageDialog} setOpen={setOpenMessageDialog}/>
+            }
+            {openConfirmationDialog 
+                && <CustomAlertDialog 
+                    open={openConfirmationDialog}
+                    title={"Convite sem convidados"}
+                    message={`Você não adicionou nenhum convidado nesse convite, deseja salvar sem convidados?`}
+                    confirmButtonText={"Salvar sem convidados"}
+                    cancelButtonText={"Adicionar convidados"}
+                    onConfirm={(event) => addInvitation(event, true)} 
+                    onCancel={() => openGuestPopup()} 
+                    setOpen={(isOpen) => setOpenConfirmationDialog(isOpen)}
+                />
+            }
+            
+
+            {/**********Dialog do Convidado **********/}
+            {openGuest && 
+            <Dialog slotProps={{
+            paper: {
+                component: 'form',
+                onSubmit: handleSubmit(onGuestSubmit, onGuestError)
+            }
+            }} sx={{
+                minWidth: '800px',
+                '& .MuiPaper-root': {
+                background: COLOR_WHITE
+                }
+            }} fullWidth open={openGuest} onClose={closeGuestPopup} maxWidth="md">
+                <StyledDialogTitle justifyContent={'center'}>
+                    Adicionar convidado
+                    <IconButton style={{float:'right'}} onClick={closeGuestPopup}>
+                        <CloseIcon sx={{ color: `grey[200]`}}/>
+                    </IconButton>
+                </StyledDialogTitle>
+                <Divider/>
+                <StyledDialogContent>
+                    <Grid2 container spacing={2}>
+                        <Grid2 size={{ xs: 9, sm: 9, md: 9 }}>
+                            <StyledLabel>Nome do convidado*</StyledLabel>
+                            <StyledTextField 
+                                {...register("newGuestName", {required: true})} 
+                                error={errors.newGuestName}
+                                helperText={errors.newGuestName && "Campo obrigatório"}
+                                value={newGuestName} 
+                                onChange={e => setNewGuestName(e.target.value)} 
+                                id="outlined-basic" fullWidth variant="outlined" 
+                                placeholder="Ex.: Julia"
+                            />
+                        </Grid2>
+                        <Grid2 size={{ xs: 3, sm: 3, md: 3 }}>
+                            <StyledLabel style={{display: 'flex', alignItems: 'center'}}>
+                                RSVP
+                                <Tooltip title={"Status de Confirmação de presença"}>
+                                    <StyledInfoButton color="primary"/>
+                                </Tooltip>
+                            </StyledLabel>
+                            <RadioOptions value={rsvp}
+                                onClick={setRsvp}
+                                options={[
+                                    {id: 1, value: "pending", label: <PriorityHighIcon/>, hint:'Pendente', color: COLOR_WARNING},
+                                    {id: 2, value: "confirmed", label: <CheckIcon/>, hint:'Confirmado', color: COLOR_SUCCESS},
+                                    {id: 3, value: "canceled", label: <CloseIcon/>, hint:'Cancelado', color: COLOR_ERROR}
+                                ]}
+                            />
+                        </Grid2>
+                    </Grid2>
+                    <Grid2 container spacing={2}>
+                        <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
+                            <StyledLabel>Mesa: </StyledLabel>
+                            <Controller
+                                name="table"
+                                control={control}
+                                defaultValue={table}
+                                rules={{ required: true }}
+                                render={({field}) =>
+                                    <ListaSuspensa 
+                                        {...field} 
+                                        value={table} 
+                                        onChange={(value) => {
+                                            field.onChange(value)
+                                            setTable(value)
+                                        }} 
+                                        label="Digite ou selecione a mesa" 
+                                        itens={tableList}
+                                    />
+                                }
+                            />
+                            {errors.table && <StyledErrorMessage variante={"legenda"} componente={"legenda"}>Campo obrigatório</StyledErrorMessage>}
+                        </Grid2>
+                        <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
+                            <StyledLabel>Gênero:</StyledLabel>
+                            <RadioOptions value={gender} 
+                                onClick={setGender} 
+                                options={[
+                                    {id: 1, value: 'Masculino', label: 'Masculino'},
+                                    {id: 2, value: 'Feminino', label: 'Feminino'},
+                                    {id: 3, value: 'Não binário', label: 'Não binário'}
+                                ]}
+                            />
+                        </Grid2>
+                    </Grid2>
+                    <Grid2 container spacing={2}>
+                        <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
+                            <StyledLabel>Faixa etária: </StyledLabel>
+                            <Controller
+                                name="ageGroup"
+                                control={control}
+                                defaultValue={ageGroup}
+                                rules={{ required: true }}
+                                render={({field}) =>
+                                    <ListaSuspensa 
+                                        {...field} 
+                                        value={ageGroup} 
+                                        onChange={(value) => {
+                                            field.onChange(value)
+                                            setAgeGroup(value)
+                                        }} 
+                                        itens={ageGroupList}
+                                    />
+                                }
+                            />
+                            {errors.ageGroup && <StyledErrorMessage variante={"legenda"} componente={"legenda"}>Campo obrigatório</StyledErrorMessage>}
+                        </Grid2>
+                        <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
+                            <StyledLabel>Pagamento/custo por convidado:</StyledLabel>
+                            <RadioOptions value={paymentType} 
+                                onClick={setPaymentType} 
+                                options={[
+                                    {id: 1, value: 'Inteira', label: 'Inteira'},
+                                    {id: 2, value: 'Meia', label: 'Meia'},
+                                    {id: 3, value: 'Gratuita', label: 'Gratuita'}
+                                ]}
+                            />
+                        </Grid2>
+                    </Grid2>
+                    <Grid2 container spacing={2}>
+                        <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
+                            <StyledLabel>RG: </StyledLabel>
+                            <StyledTextField 
+                                {...register("rg", {required: true})} 
+                                error={errors.rg}
+                                helperText={errors.rg && "Campo obrigatório"} 
+                                value={rg}
+                                onChange={e => handleRGChange(e.target.value)}
+                                variant="outlined" label=""
+                            />
+                        </Grid2>
+                        <Grid2 size={{ xs: 6, sm: 6, md: 6 }}>
+                            <StyledLabel>CPF: </StyledLabel>
+                            <StyledTextField 
+                                {...register("cpf", {required: true})} 
+                                error={errors.cpf}
+                                helperText={errors.cpf && "Campo obrigatório"}
+                                value={cpf} 
+                                onChange={e => handleCPFChange(e.target.value)} 
+                                variant="outlined" label=""
+                            />
+                        </Grid2>
+                    </Grid2>
+                </StyledDialogContent>
+                <DialogActions sx={{padding: 0}}>
+                    <Button fullWidth type="submit" color="primary" variant="contained">Salvar</Button>
+                </DialogActions>
+            </Dialog>}
         </Container>
     );
 }

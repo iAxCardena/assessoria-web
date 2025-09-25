@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { ThemeProvider } from 'styled-components'
-import theme from '../../theme.ts'
+import { COLOR_GREY, COLOR_PRIMARY } from '../../theme.ts'
 import { NavLink } from 'react-router'
 import { Botao } from '../../componentes/Botao/index.jsx'
 import { Tipografia } from '../../componentes/Tipografia/index.jsx'
@@ -8,7 +7,7 @@ import { Tipografia } from '../../componentes/Tipografia/index.jsx'
 const Container = styled.div`
     display: flex;
     justify-content: center;
-    background-color: ${props => props.backgroudcolor};
+    background-color: ${COLOR_PRIMARY['main']};
     align-items: center;
     height: 100vh;
 `
@@ -16,7 +15,7 @@ const Wrapper = styled.div`
     display: flex;
     box-sizing: border-box;
     border-radius: 25px;
-    background-color: ${props => props.backgroudcolor};
+    background-color: ${COLOR_GREY['50']};
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -35,33 +34,31 @@ const TextWrapper = styled.div`
 
 function ErrorPage() {
   return (
-    <ThemeProvider theme={theme}>
-        <Container backgroudcolor={theme.palette.primary.main}>
-            <Wrapper backgroudcolor={theme.palette.grey[50]}>
-                <TextWrapper>
-                    <Tipografia
-                        variante='h2'
-                        sx={{
-                            color: theme.palette.primary.main,
-                            fontWeight: 400,
-                            textAlign: 'center'
-                        }}
-                    >
-                        Página não encontrada
-                    </Tipografia>
-                    <Tipografia 
-                        variante='h6' 
-                        sx={{textAlign: 'center'}}
-                    >
-                        A página que está procurando não existe ou encontra-se indisponível
-                    </Tipografia>
-                </TextWrapper>
-                <NavLink style={{textDecoration: 'none'}} to={'/'}>
-                    <Botao variant={'contained'}>Voltar para a tela inicial</Botao>
-                </NavLink>
-            </Wrapper>
-        </Container>
-    </ThemeProvider>
+    <Container>
+        <Wrapper>
+            <TextWrapper>
+                <Tipografia
+                    variante='h2'
+                    sx={{
+                        color: COLOR_PRIMARY['main'],
+                        fontWeight: 400,
+                        textAlign: 'center'
+                    }}
+                >
+                    Página não encontrada
+                </Tipografia>
+                <Tipografia 
+                    variante='h6' 
+                    sx={{textAlign: 'center'}}
+                >
+                    A página que está procurando não existe ou encontra-se indisponível
+                </Tipografia>
+            </TextWrapper>
+            <NavLink style={{textDecoration: 'none'}} to={'/'}>
+                <Botao variant={'contained'}>Voltar para a tela inicial</Botao>
+            </NavLink>
+        </Wrapper>
+    </Container>
   )
 }
 

@@ -1,7 +1,6 @@
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, Divider, Grid2 as Grid, ThemeProvider, Typography } from '@mui/material';
-import theme from '../../../../theme.ts';
+import { Box, Button, Divider, Grid2 as Grid, Typography } from '@mui/material';
+import { COLOR_BLACK, COLOR_GREY, COLOR_PRIMARY } from '../../../../theme.ts';
 import styled from '@emotion/styled';
 
 const StyledProfileIcon = styled(AccountCircleOutlinedIcon)`
@@ -9,11 +8,11 @@ const StyledProfileIcon = styled(AccountCircleOutlinedIcon)`
   width: 60px;
   height: 60px;
   margin-right: 10px;
-  color: ${(props) => props.backgroundcolor};
+  color: ${COLOR_GREY['400']};
 `
 // const StyledAddIcon = styled(AddIcon)`
 //   display: flex;
-//   background-color: ${props => props.backgroundcolor};
+//   background-color: ${COLOR_GREY['200']};
 //   color: ${props => props.color};
 //   border-radius: 25px;
 // `
@@ -26,7 +25,7 @@ function EventItem({event}) {
   const newDate = new Date(event.eventDate)
   console.log(newDate)
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Grid
         container
         spacing={1}
@@ -35,15 +34,15 @@ function EventItem({event}) {
           padding: '10px',
           alignItems: 'center',
           ":hover": {
-            backgroundColor: theme.palette.grey[100],
+            backgroundColor: COLOR_GREY['100'],
             cursor: 'pointer'
           }
         }}
       >
-        <StyledProfileIcon backgroundcolor={theme.palette.grey[400]}/>
+        <StyledProfileIcon/>
         <Grid size={{ sm: 3, md: 4, lg: 5 }}>
           <Box>
-            <Typography variant='body1' sx={{fontWeight: '700', fontSize: '14px'}} color={theme.palette.grey[400]}>
+            <Typography variant='body1' sx={{fontWeight: '700', fontSize: '14px'}} color={COLOR_GREY['400']}>
               {event.eventType}
             </Typography>
             <Typography variant='body1' sx={{fontWeight: '700', lineHeight: '1'}}>
@@ -66,11 +65,16 @@ function EventItem({event}) {
             <>
               {/* <Typography variant='body1' sx={{fontSize: '12px'}}>Faltam X dias</Typography> */}
               <Typography variant='body1'>{event.eventDate}</Typography>
-              <Typography variant='body1' sx={{fontSize: '12px', color: theme.palette.grey[500]}}>Terça</Typography>
+              <Typography variant='body1' sx={{fontSize: '12px', color: COLOR_GREY[500]}}>Terça</Typography>
               <Button sx={{display: 'flex', padding: 0, justifyContent: 'start'}} variant={"text"}>
                 {event.status==='in progress' && <Typography
                   variant='body1' 
                   sx={{
+                    color: COLOR_PRIMARY['main'],
+                    
+                    ":hover": {
+                      backgroundColor: COLOR_GREY['200']
+                    },
                     fontSize: '12px',
                     padding: 0,
                     fontWeight: 700,
@@ -84,19 +88,19 @@ function EventItem({event}) {
             : <Typography variant='body1'>Sem data</Typography>}
         </Grid>
         {/* <Grid size={{ sm: 1, md: 1, lg: 2 }}>
-          <StyledAddIcon backgroundcolor={theme.palette.grey[200]} color={theme.palette.text.primary}/>
+          <StyledAddIcon backgroundcolor={COLOR_GREY[200]} color={COLOR_TEXT}/>
         </Grid> */}
         <Grid size={{ sm: 2, md: 2, lg: 1 }}>
           <Typography variant='body1'>0 de {event.guests}</Typography>
-          <Typography variant='body1' sx={{color: theme.palette.grey[500]}}>concluídas</Typography>
+          <Typography variant='body1' sx={{color: COLOR_GREY[500]}}>concluídas</Typography>
         </Grid>
         <Grid size={{ sm: 1, md: 1, lg: 1 }}>
           <Typography variant='body1'>0 de {event.guests}</Typography>
-          <Typography variant='body1' sx={{color: theme.palette.grey[500]}}>confirmados</Typography>
+          <Typography variant='body1' sx={{color: COLOR_GREY[500]}}>confirmados</Typography>
         </Grid>
       </Grid>
       <Divider />
-    </ThemeProvider>
+    </>
   )
 }
 

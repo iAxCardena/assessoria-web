@@ -1,5 +1,3 @@
-import { createTheme } from "@mui/material";
-
 /* Cores
 #f6ebd9 Albescent White (background)?
 #edbbb5 terciaria
@@ -16,57 +14,29 @@ import { createTheme } from "@mui/material";
 #272c33
 #55565a
 */
-
-export const theme = createTheme({
-  palette: {
-    primary: {
-        main: '#b47773',
-        dark: '#965b59',
-        light: '#edbbb5',
-        contrastText: '#FFF',
-    },
-    secondary: {
-		main: '#644435',
-    },
-    background: {
-      	default: '#f6ebd9',
-		paper: '#f0eaea'
-    },
-    text: {
-        primary: '#55565a'
-    },
-    warning: {
-      	main: '#fdc862'
-    },
-    success: {
-      	main: '#5cb85c',
-    },
-    error: {
-      	main: '#fc4b6c'
-    }
-  },
-});
-
-
-// allow configuration using `createTheme`
-// declare module "@mui/material/styles" {
-//     interface PaletteOptions {
-//         neutral?: PaletteOptions["primary"];
-//     }
-// }
-
-  // Update the Button's color prop options
-// declare module "@mui/material/Button" {
-//     interface ButtonPropsColorOverrides {
-//         neutral: true;
-//     }
-// }
-
-// Update the Switch's color prop options
-// declare module "@mui/material/Switch" {
-//     interface SwitchPropsColorOverrides {
-//         neutral: true;
-//     }
-// }
-
-export default theme;
+export const COLOR_WHITE = '#FFF';
+export const COLOR_GREY = {
+  '50': '#fafafa',
+  '100': '#f5f5f5',
+  '200': '#eeeeee',
+  '300': '#e0e0e0',
+  '400': '#bdbdbd',
+  '500': '#9e9e9e',
+  '600': '#757575',
+  '700': '#616161',
+  '800': '#424242',
+  '900': '#212121',
+}
+export const COLOR_BLACK = '#272c33';
+export const COLOR_PRIMARY = {
+  'light': '#edbbb5',
+  'main': '#b47773',
+  'dark': '#965b59'
+};
+export const COLOR_SECONDARY = '#644435';
+export const COLOR_BACKGROUND = '#f6ebd9';
+export const COLOR_PAPER = '#f0eaea';
+export const COLOR_TEXT = '#55565a';
+export const COLOR_WARNING = '#fdc862';
+export const COLOR_SUCCESS = '#5cb85c';
+export const COLOR_ERROR = '#fc4b6c';
