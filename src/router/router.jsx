@@ -2,18 +2,22 @@ import { createBrowserRouter } from "react-router";
 import ErrorPage from "../pages/ErrorPage";
 import PaginaPadrao from "../pages/PaginaPadrao";
 import Eventos from "../pages/Eventos";
+import Convidados from "../pages/Convidados";
 
 
 export const router = createBrowserRouter([
     {
-        path: "/",
         element: <PaginaPadrao/>,
         errorElement: <ErrorPage/>,
         children: [
             {
-                path:"",
-                element: <Eventos/>
-            }
+                path: "/events",
+                element: <Eventos/>,
+            },
+            {
+                path: ":id",
+                element: <Convidados/>,
+            },
         ]
     }
 ])

@@ -12,7 +12,7 @@ import QRCode from 'qrcode';
 import { Controller, useForm } from "react-hook-form";
 import { Botao } from "../../componentes/Botao/index.jsx";
 import { useConvidadoContext } from "../../contexto/ConvidadoContext.jsx";
-import { COLOR_ERROR, COLOR_SECONDARY, COLOR_SUCCESS, COLOR_WARNING, COLOR_WHITE } from "../../theme.ts";
+import { COLOR_ERROR, COLOR_GREY, COLOR_SUCCESS, COLOR_WARNING, COLOR_WHITE } from "../../theme.ts";
 import { Tipografia } from "../../componentes/Tipografia/index.jsx";
 import TabPanel from "../../componentes/TabPanel/index.jsx";
 import ddiList from "../../assets/json/ddi.json"
@@ -101,7 +101,7 @@ const StyledErrorMessage = styled.p`
     color: ${COLOR_ERROR};
 `
 
-export default function ListaConvidados() {
+export default function Convidados() {
     const {register, handleSubmit, control, setValue, formState: {errors}} = useForm()
     const [openInvitations, openInvitationsChange] = useState(false);
     const [openGuest, openGuestChange] = useState(false);

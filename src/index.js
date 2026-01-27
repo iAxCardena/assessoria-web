@@ -4,7 +4,6 @@ import './index.css';
 import '@fontsource/roboto/300.css';
 import { createGlobalStyle } from 'styled-components';
 import App from './App';
-import Header from './componentes/Header';
 import { StyledEngineProvider } from '@mui/material';
 
 const GlobalStyle = createGlobalStyle`

@@ -1,6 +1,6 @@
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Box, Button, Divider, Grid2 as Grid, Typography } from '@mui/material';
-import { COLOR_BLACK, COLOR_GREY, COLOR_PRIMARY } from '../../../../theme.ts';
+import { COLOR_GREY, COLOR_PRIMARY } from '../../../../theme.ts';
 import styled from '@emotion/styled';
 
 const StyledProfileIcon = styled(AccountCircleOutlinedIcon)`
